@@ -45,6 +45,11 @@ out/
 .vite/
 *.tsbuildinfo
 
+# Database files
+*.db
+*.sqlite3
+*.sqlite
+
 # Environment variables
 .env
 .env.*
