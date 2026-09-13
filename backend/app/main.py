@@ -1,7 +1,8 @@
 """AlgoLens Pro FastAPI application entrypoint."""
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.api.api import api_router
 
 app = FastAPI(
     title="AlgoLens Pro API",
@@ -9,19 +10,20 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# Enable CORS for local development
+# Configure CORS specifically for local Vite frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Register API routers under /api prefix
+app.include_router(api_router, prefix="/api")
 
 
 @app.get("/health", tags=["Health"])

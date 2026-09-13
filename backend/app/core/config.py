@@ -16,14 +16,14 @@ else:
 class Settings:
     PROJECT_NAME: str = "AlgoLens Pro API"
     VERSION: str = "0.1.0"
-    API_V1_STR: str = "/api/v1"
+    API_V1_STR: str = "/api"
 
     # Database configuration (Supabase Postgres or local fallback)
     _raw_db_url: str = os.getenv("DATABASE_URL", "")
 
     @property
     def DATABASE_URL(self) -> str:
-        url = self._raw_db_url.strip()
+        url = os.getenv("DATABASE_URL", self._raw_db_url).strip()
         if not url:
             # Fallback to local SQLite database for offline development & migration generation
             return f"sqlite:///{BACKEND_DIR / 'algolens_dev.db'}"
@@ -46,6 +46,19 @@ class Settings:
             # Supabase Postgres requires SSL connection
             options["connect_args"] = {"sslmode": "require"}
         return options
+
+    # JWT & Security configuration
+    @property
+    def SECRET_KEY(self) -> str:
+        key = os.getenv("SECRET_KEY", "").strip()
+        if not key:
+            raise RuntimeError(
+                "SECRET_KEY environment variable is not set. Please configure it in backend/.env"
+            )
+        return key
+
+    JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))  # 24 hours
 
 
 settings = Settings()
