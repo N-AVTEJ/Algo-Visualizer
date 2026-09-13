@@ -1,5 +1,4 @@
 from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool
 from alembic import context
 import sys
 from pathlib import Path
@@ -9,6 +8,7 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
 from app.core.config import settings
+from app.db.session import engine
 from app.models import Base
 
 # this is the Alembic Config object, which provides
@@ -19,8 +19,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Set database URL dynamically from app settings (.env)
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Set database URL dynamically with escaped % for configparser compatibility
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL.replace("%", "%%"))
 
 # Set target metadata for autogenerate
 target_metadata = Base.metadata
@@ -28,9 +28,8 @@ target_metadata = Base.metadata
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
-    url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url,
+        url=settings.DATABASE_URL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -41,18 +40,8 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode."""
-    configuration = config.get_section(config.config_ini_section, {})
-    configuration["sqlalchemy.url"] = settings.DATABASE_URL
-
-    connectable = engine_from_config(
-        configuration,
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-        **settings.SQLALCHEMY_ENGINE_OPTIONS,
-    )
-
-    with connectable.connect() as connection:
+    """Run migrations in 'online' mode using the shared application engine."""
+    with engine.connect() as connection:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
