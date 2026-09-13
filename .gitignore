@@ -3,6 +3,8 @@ node_modules/
 /.pnp
 .pnp.*
 
+# Project Brain (Local documentation only)
+brain/
 # Python virtual environments & bytecode
 venv/
 .venv/
