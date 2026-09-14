@@ -248,7 +248,17 @@ export const MapColoring: React.FC<MapColoringProps> = ({
         if (currentAction === 'solution_found') return 'SOLVED ★';
         return 'ATTEMPT';
       });
-  }, [vertices, edges, step, selectedPalette, paletteColors, currentVertex, conflictingVertex, currentAction, partialColoring]);
+  }, [
+    vertices,
+    edges,
+    step,
+    selectedPalette,
+    paletteColors,
+    currentVertex,
+    conflictingVertex,
+    currentAction,
+    partialColoring,
+  ]);
 
   return (
     <div className="w-full flex flex-col items-center bg-slate-950/80 border border-slate-800 rounded-xl p-5 shadow-xl">

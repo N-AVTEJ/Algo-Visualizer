@@ -142,16 +142,18 @@ export const GraphColoringStage: React.FC = () => {
   const steps = traceData?.steps ?? [];
 
   const metricsDisplay: Record<string, string | number | boolean> = useMemo(() => {
-    if (!traceData) return {};
-    return {
-      'Vertices Count (|V|)': traceData.metrics.vertices_count,
-      'Edges Count (|E|)': traceData.metrics.edges_count,
-      'Colors Attempted': traceData.metrics.colors_attempted,
-      'Conflicts Detected': traceData.metrics.conflicts_detected,
-      'Backtracks Performed': traceData.metrics.backtracks_performed,
-      'Chromatic Number χ(G)': traceData.chromatic_number > 0 ? traceData.chromatic_number : 'N/A',
-      'Colorable': traceData.is_colorable ? 'Valid Coloring Found' : 'Uncolorable',
-    };
+    const m: Record<string, string | number | boolean> = {};
+    if (traceData) {
+      m['Vertices Count (|V|)'] = traceData.metrics.vertices_count;
+      m['Edges Count (|E|)'] = traceData.metrics.edges_count;
+      m['Colors Attempted'] = traceData.metrics.colors_attempted;
+      m['Conflicts Detected'] = traceData.metrics.conflicts_detected;
+      m['Backtracks Performed'] = traceData.metrics.backtracks_performed;
+      m['Chromatic Number χ(G)'] =
+        traceData.chromatic_number > 0 ? traceData.chromatic_number : 'N/A';
+      m['Colorable'] = traceData.is_colorable ? 'Valid Coloring Found' : 'Uncolorable';
+    }
+    return m;
   }, [traceData]);
 
   return (
@@ -218,53 +220,60 @@ export const GraphColoringStage: React.FC = () => {
             chromaticNumber={traceData.chromatic_number}
           />
 
-            <AnimationPlayer
-              steps={steps}
-              currentStepIndex={currentStepIndex}
-              isPlaying={isPlaying}
-              onPlayToggle={(playing) => setIsPlaying(playing)}
-              onStepChange={(idx) => setCurrentStepIndex(idx)}
-              onReset={() => setCurrentStepIndex(0)}
-              initialSpeedMs={speedMs}
-              onSpeedChange={(spd) => setSpeedMs(spd)}
-            />
+          <AnimationPlayer
+            steps={steps}
+            currentStepIndex={currentStepIndex}
+            isPlaying={isPlaying}
+            onPlayToggle={(playing) => setIsPlaying(playing)}
+            onStepChange={(idx) => setCurrentStepIndex(idx)}
+            onReset={() => setCurrentStepIndex(0)}
+            initialSpeedMs={speedMs}
+            onSpeedChange={(spd) => setSpeedMs(spd)}
+          />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-1">
-                <MetricsPanel
-                  title="Coloring Search Metrics"
-                  complexity="O(k^V) backtracking"
-                  status={currentStep?.action === 'solution_found' ? 'found' : isPlaying ? 'searching' : 'idle'}
-                  statusMessage={
-                    currentStep?.action === 'solution_found'
-                      ? `Valid ${traceData.chromatic_number}-Coloring Found!`
-                      : currentStep?.action === 'conflict'
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1">
+              <MetricsPanel
+                title="Coloring Search Metrics"
+                complexity="O(k^V) backtracking"
+                status={
+                  currentStep?.action === 'solution_found'
+                    ? 'found'
+                    : isPlaying
+                      ? 'searching'
+                      : 'idle'
+                }
+                statusMessage={
+                  currentStep?.action === 'solution_found'
+                    ? `Valid ${traceData.chromatic_number}-Coloring Found!`
+                    : currentStep?.action === 'conflict'
                       ? `Conflict: ${currentStep.conflict_reason}`
                       : currentStep?.action === 'backtrack'
-                      ? 'Backtracking to Previous Vertex Choice'
-                      : isPlaying
-                      ? 'Testing Color Assignments...'
-                      : 'Awaiting Graph Coloring'
-                  }
-                  metrics={metricsDisplay}
-                  accentColor="violet"
-                />
-              </div>
-              <div className="lg:col-span-2">
-                <CodeDisplay
-                  title="Graph Coloring Backtracking"
-                  code={GRAPH_COLORING_CODE}
-                  language="python"
-                />
-              </div>
+                        ? 'Backtracking to Previous Vertex Choice'
+                        : isPlaying
+                          ? 'Testing Color Assignments...'
+                          : 'Awaiting Graph Coloring'
+                }
+                metrics={metricsDisplay}
+                accentColor="violet"
+              />
             </div>
+            <div className="lg:col-span-2">
+              <CodeDisplay
+                title="Graph Coloring Backtracking"
+                code={GRAPH_COLORING_CODE}
+                language="python"
+              />
+            </div>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center p-12 text-center rounded-xl bg-slate-900/40 border border-dashed border-slate-800">
           <Network className="w-12 h-12 text-slate-600 mb-3" />
           <h3 className="text-base font-semibold text-slate-300">Ready to Color Graph</h3>
           <p className="text-sm text-slate-500 max-w-md mt-1">
-            Click &ldquo;Color Graph&rdquo; above to run backtracking vertex coloring, observe neighbor conflicts, and discover the chromatic number.
+            Click &ldquo;Color Graph&rdquo; above to run backtracking vertex coloring, observe
+            neighbor conflicts, and discover the chromatic number.
           </p>
         </div>
       )}

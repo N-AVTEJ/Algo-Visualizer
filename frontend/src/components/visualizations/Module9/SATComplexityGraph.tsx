@@ -32,10 +32,7 @@ export const SATComplexityGraph: React.FC = () => {
     }
 
     // Scales
-    const xScale = d3
-      .scaleLinear()
-      .domain([1, maxPlotN])
-      .range([0, innerWidth]);
+    const xScale = d3.scaleLinear().domain([1, maxPlotN]).range([0, innerWidth]);
 
     const yScale = d3
       .scaleLog()
@@ -172,12 +169,15 @@ export const SATComplexityGraph: React.FC = () => {
               Exponential Growth Warning (n &gt; 25)
             </span>
             <p className="text-amber-200/90 leading-relaxed">
-              For <span className="font-mono font-bold">n = {nValue}</span>, the truth assignment space contains{' '}
+              For <span className="font-mono font-bold">n = {nValue}</span>, the truth assignment
+              space contains{' '}
               <span className="font-mono font-bold text-amber-300">
                 2^{nValue} = {Math.pow(2, nValue).toLocaleString()}
               </span>{' '}
-              assignments. Brute-force enumeration grows exponentially and becomes computationally impractical on classical hardware.
-              This highlights why Boolean Satisfiability (SAT) is the canonical NP-Complete problem (Cook-Levin Theorem) and why modern solvers rely on DPLL, clause learning (CDCL), and heuristics rather than exhaustive evaluation.
+              assignments. Brute-force enumeration grows exponentially and becomes computationally
+              impractical on classical hardware. This highlights why Boolean Satisfiability (SAT) is
+              the canonical NP-Complete problem (Cook-Levin Theorem) and why modern solvers rely on
+              DPLL, clause learning (CDCL), and heuristics rather than exhaustive evaluation.
             </p>
           </div>
         </div>
@@ -185,7 +185,11 @@ export const SATComplexityGraph: React.FC = () => {
 
       {/* D3 Curve Canvas */}
       <div className="w-full overflow-x-auto">
-        <svg ref={svgRef} className="w-full min-w-[500px] h-[300px]" aria-label="Complexity Curve" />
+        <svg
+          ref={svgRef}
+          className="w-full min-w-[500px] h-[300px]"
+          aria-label="Complexity Curve"
+        />
       </div>
 
       {/* Info Stats Cards */}

@@ -217,15 +217,22 @@ export const BranchBoundStage: React.FC = () => {
               <MetricsPanel
                 title="Search Tree Metrics"
                 complexity="O(2^n) branch & bound"
-                status={currentStep?.action === 'solution_candidate' || currentStep?.action === 'best_solution_updated' ? 'found' : isPlaying ? 'searching' : 'idle'}
+                status={
+                  currentStep?.action === 'solution_candidate' ||
+                  currentStep?.action === 'best_solution_updated'
+                    ? 'found'
+                    : isPlaying
+                      ? 'searching'
+                      : 'idle'
+                }
                 statusMessage={
                   currentStep?.action === 'best_solution_updated'
                     ? `Optimal Solution: Value ${currentStep.best_value}`
                     : currentStep?.action === 'branch_pruned'
-                    ? `Pruned: ${currentStep.prune_reason}`
-                    : isPlaying
-                    ? 'Exploring State-Space Tree...'
-                    : 'Awaiting Exploration'
+                      ? `Pruned: ${currentStep.prune_reason}`
+                      : isPlaying
+                        ? 'Exploring State-Space Tree...'
+                        : 'Awaiting Exploration'
                 }
                 metrics={metricsDisplay}
                 accentColor="amber"
@@ -243,9 +250,12 @@ export const BranchBoundStage: React.FC = () => {
       ) : (
         <div className="flex flex-col items-center justify-center p-12 text-center rounded-xl bg-slate-900/40 border border-dashed border-slate-800">
           <GitFork className="w-12 h-12 text-slate-600 mb-3" />
-          <h3 className="text-base font-semibold text-slate-300">Ready to Explore State-Space Tree</h3>
+          <h3 className="text-base font-semibold text-slate-300">
+            Ready to Explore State-Space Tree
+          </h3>
           <p className="text-sm text-slate-500 max-w-md mt-1">
-            Click &ldquo;Run Search&rdquo; above to compute fractional relaxation upper bounds and animate the 0/1 Knapsack Branch & Bound search tree.
+            Click &ldquo;Run Search&rdquo; above to compute fractional relaxation upper bounds and
+            animate the 0/1 Knapsack Branch & Bound search tree.
           </p>
         </div>
       )}

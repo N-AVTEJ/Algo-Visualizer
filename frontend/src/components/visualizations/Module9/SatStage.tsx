@@ -43,11 +43,7 @@ const PRESETS: { name: string; variables: string[]; clauses: string[][] }[] = [
   {
     name: 'Contradictory Formula (UNSAT)',
     variables: ['p', 'q'],
-    clauses: [
-      ['p'],
-      ['~p'],
-      ['q', '~q'],
-    ],
+    clauses: [['p'], ['~p'], ['q', '~q']],
   },
   {
     name: 'Chained 4-Variable Horn Formula (SAT)',
@@ -119,15 +115,18 @@ export const SatStage: React.FC = () => {
   const steps = traceData?.steps ?? [];
 
   const metricsDisplay: Record<string, string | number | boolean> = useMemo(() => {
-    if (!traceData) return {};
-    return {
-      'Variables Count (n)': traceData.metrics.variables_count,
-      'Clauses Count (m)': traceData.metrics.clauses_count,
-      'Total Space (2^n)': traceData.metrics.total_possible_assignments,
-      'Assignments Checked': traceData.metrics.assignments_checked,
-      'Result': traceData.is_satisfiable ? 'SAT (Satisfiable)' : 'UNSAT (Unsatisfiable)',
-      'Early Termination': traceData.early_termination ? 'Yes (Halted on SAT)' : 'No (Exhausted)',
-    };
+    const m: Record<string, string | number | boolean> = {};
+    if (traceData) {
+      m['Variables Count (n)'] = traceData.metrics.variables_count;
+      m['Clauses Count (m)'] = traceData.metrics.clauses_count;
+      m['Total Space (2^n)'] = traceData.metrics.total_possible_assignments;
+      m['Assignments Checked'] = traceData.metrics.assignments_checked;
+      m['Result'] = traceData.is_satisfiable ? 'SAT (Satisfiable)' : 'UNSAT (Unsatisfiable)';
+      m['Early Termination'] = traceData.early_termination
+        ? 'Yes (Halted on SAT)'
+        : 'No (Exhausted)';
+    }
+    return m;
   }, [traceData]);
 
   return (
@@ -237,13 +236,15 @@ export const SatStage: React.FC = () => {
                 <MetricsPanel
                   title="SAT Solver Telemetry"
                   complexity="O(2^n · m)"
-                  status={currentStep?.is_satisfying_found ? 'found' : isPlaying ? 'searching' : 'idle'}
+                  status={
+                    currentStep?.is_satisfying_found ? 'found' : isPlaying ? 'searching' : 'idle'
+                  }
                   statusMessage={
                     currentStep?.all_satisfied
                       ? 'Satisfying Truth Assignment Found!'
                       : isPlaying
-                      ? `Testing Assignment #${currentStep?.assignment_number ?? 0}...`
-                      : 'Awaiting Formula Evaluation'
+                        ? `Testing Assignment #${currentStep?.assignment_number ?? 0}...`
+                        : 'Awaiting Formula Evaluation'
                   }
                   metrics={metricsDisplay}
                   accentColor="emerald"
@@ -261,9 +262,12 @@ export const SatStage: React.FC = () => {
         ) : (
           <div className="flex flex-col items-center justify-center p-12 text-center rounded-xl bg-slate-900/40 border border-dashed border-slate-800">
             <Binary className="w-12 h-12 text-slate-600 mb-3" />
-            <h3 className="text-base font-semibold text-slate-300">Ready to Enumerate Truth Table</h3>
+            <h3 className="text-base font-semibold text-slate-300">
+              Ready to Enumerate Truth Table
+            </h3>
             <p className="text-sm text-slate-500 max-w-md mt-1">
-              Click &ldquo;Solve Formula&rdquo; above to evaluate CNF clauses over the truth assignment space with animated step traces.
+              Click &ldquo;Solve Formula&rdquo; above to evaluate CNF clauses over the truth
+              assignment space with animated step traces.
             </p>
           </div>
         )

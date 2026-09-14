@@ -46,7 +46,10 @@ export const TruthTable: React.FC<TruthTableProps> = ({
             Variables: <span className="text-slate-200">{variables.length}</span>
           </span>
           <span className="text-slate-400">
-            Total Space: <span className="text-indigo-400">2^{variables.length} = {totalAssignments}</span>
+            Total Space:{' '}
+            <span className="text-indigo-400">
+              2^{variables.length} = {totalAssignments}
+            </span>
           </span>
         </div>
       </div>
@@ -57,7 +60,9 @@ export const TruthTable: React.FC<TruthTableProps> = ({
         <div className="p-4 rounded-lg bg-slate-900/90 border border-slate-800 flex flex-col gap-2">
           <div className="flex items-center justify-between text-xs text-slate-400 font-semibold uppercase tracking-wider">
             <span>Assignment #{currentAssignmentNum} Truth Values</span>
-            <span>Progress: {currentAssignmentNum} / {totalAssignments}</span>
+            <span>
+              Progress: {currentAssignmentNum} / {totalAssignments}
+            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 mt-2">

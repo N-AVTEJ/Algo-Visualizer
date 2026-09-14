@@ -15,11 +15,7 @@ interface TreeNodeHierarchy {
   children: TreeNodeHierarchy[];
 }
 
-export const BranchBoundTree: React.FC<BranchBoundTreeProps> = ({
-  step,
-  treeNodes,
-  capacity,
-}) => {
+export const BranchBoundTree: React.FC<BranchBoundTreeProps> = ({ step, treeNodes, capacity }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   // Derive visible nodes up to the current step
@@ -79,7 +75,10 @@ export const BranchBoundTree: React.FC<BranchBoundTreeProps> = ({
 
     // Links
     const linkGenerator = d3
-      .linkVertical<d3.HierarchyPointLink<TreeNodeHierarchy>, d3.HierarchyPointNode<TreeNodeHierarchy>>()
+      .linkVertical<
+        d3.HierarchyPointLink<TreeNodeHierarchy>,
+        d3.HierarchyPointNode<TreeNodeHierarchy>
+      >()
       .x((d) => d.x)
       .y((d) => d.y);
 
@@ -231,8 +230,8 @@ export const BranchBoundTree: React.FC<BranchBoundTreeProps> = ({
             Current Active
           </span>
           <span className="flex items-center gap-1.5 font-medium">
-            <span className="w-3 h-3 rounded bg-amber-600 border border-amber-400"></span>
-            ★ Best Solution
+            <span className="w-3 h-3 rounded bg-amber-600 border border-amber-400"></span>★ Best
+            Solution
           </span>
           <span className="flex items-center gap-1.5 font-medium">
             <span className="w-3 h-3 rounded bg-rose-950 border border-dashed border-rose-500"></span>
@@ -245,9 +244,7 @@ export const BranchBoundTree: React.FC<BranchBoundTreeProps> = ({
         </div>
         <div className="flex items-center gap-3 font-mono text-xs">
           <span className="text-emerald-400">Capacity: {capacity}</span>
-          <span className="text-amber-400">
-            Current Best: {step?.best_value ?? 0}
-          </span>
+          <span className="text-amber-400">Current Best: {step?.best_value ?? 0}</span>
         </div>
       </div>
 

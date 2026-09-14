@@ -509,11 +509,7 @@ export interface Module9RunResponse {
 // Module 10 Types (Graph Coloring Backtracking)
 // ============================================================================
 export type GraphColoringAction =
-  | 'color_attempt'
-  | 'conflict'
-  | 'assigned'
-  | 'backtrack'
-  | 'solution_found';
+  'color_attempt' | 'conflict' | 'assigned' | 'backtrack' | 'solution_found';
 
 export interface GraphColoringStep {
   step_index: number;
@@ -559,4 +555,3 @@ export interface Module10RunResponse {
     is_colorable: boolean;
   };
 }
-
