@@ -5,6 +5,7 @@ from app.models.module import Module
 from app.models.algorithm import Algorithm
 from app.models.user_progress import UserProgress
 from app.models.visualization import Visualization
+from app.models.knowledge_base import KnowledgeBase
 
 __all__ = [
     "Base",
@@ -13,4 +14,5 @@ __all__ = [
     "Algorithm",
     "UserProgress",
     "Visualization",
+    "KnowledgeBase",
 ]

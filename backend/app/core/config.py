@@ -60,5 +60,15 @@ class Settings:
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))  # 24 hours
 
+    # AI Assistant configuration (Phase 10)
+    @property
+    def OPENAI_API_KEY(self) -> str | None:
+        """Return OpenAI API key from environment, or None if not configured."""
+        key = os.getenv("OPENAI_API_KEY", "").strip()
+        return key if key else None
+
+    OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"  # 1536-dim
+    OPENAI_CHAT_MODEL: str = "gpt-4o-mini"
+
 
 settings = Settings()

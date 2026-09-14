@@ -15,5 +15,9 @@ bcrypt==4.0.1
 # Validation
 email-validator>=2.0.0
 
+# AI Assistant (Phase 10)
+openai>=1.0.0
+pgvector>=0.3.0
+
 # Dependency management & pinning
 pip-tools>=7.4.1
