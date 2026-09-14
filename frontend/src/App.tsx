@@ -9,6 +9,7 @@ import {
   LoginPage,
   RegisterPage,
   NotFoundPage,
+  AIAssistantPage,
 } from './pages';
 
 export const App: React.FC = () => {
@@ -22,6 +23,7 @@ export const App: React.FC = () => {
           <Route path="/practice/:id" element={<PracticePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/ai-assistant" element={<AIAssistantPage />} />
           {/* Catch-all for unknown routes */}
           <Route path="*" element={<NotFoundPage />} />
         </Route>

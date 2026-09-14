@@ -61,3 +61,14 @@ export interface UserProgressCreate {
 }
 
 export * from './visualization';
+
+// AI Assistant (Phase 10)
+export interface AskRequest {
+  question: string;
+}
+
+export interface AskResponse {
+  answer: string;
+  sources: string[];
+}
+

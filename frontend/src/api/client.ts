@@ -29,6 +29,8 @@ import type {
   Module9RunResponse,
   Module10RunRequest,
   Module10RunResponse,
+  AskRequest,
+  AskResponse,
 } from '../types';
 
 export const API_BASE_URL =
@@ -246,3 +248,13 @@ export async function checkHealth(): Promise<HealthResponse> {
   }
   return response.json();
 }
+
+// AI Assistant API (Phase 10)
+export const aiApi = {
+  ask: (data: AskRequest): Promise<AskResponse> =>
+    apiClient<AskResponse>('/ai/ask', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      requiresAuth: true,
+    }),
+};

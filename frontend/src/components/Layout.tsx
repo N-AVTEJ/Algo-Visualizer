@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Zap, LogIn, LogOut, User as UserIcon, GitCompare, ChevronDown } from 'lucide-react';
+import { Zap, LogIn, LogOut, User as UserIcon, GitCompare, ChevronDown, Bot } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useModuleStore } from '../store/moduleStore';
 import { modulesApi } from '../api/client';
@@ -110,6 +110,23 @@ export const Layout: React.FC = () => {
                 <GitCompare className="w-4 h-4" />
                 <span>Compare</span>
               </NavLink>
+
+              {/* AI Assistant Link — only shown when authenticated */}
+              {(isAuthenticated || token) && (
+                <NavLink
+                  to="/ai-assistant"
+                  className={({ isActive }) =>
+                    `px-3 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-1.5 ${
+                      isActive
+                        ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                    }`
+                  }
+                >
+                  <Bot className="w-4 h-4" />
+                  <span>AI Assistant</span>
+                </NavLink>
+              )}
             </nav>
           </div>
 
