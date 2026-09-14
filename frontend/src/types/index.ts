@@ -59,3 +59,5 @@ export interface UserProgressCreate {
   score?: number;
   time_spent?: number;
 }
+
+export * from './visualization';

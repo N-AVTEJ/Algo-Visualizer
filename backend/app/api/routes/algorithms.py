@@ -7,6 +7,8 @@ from app.db.session import get_db
 from app.models.algorithm import Algorithm
 from app.models.module import Module
 from app.schemas.algorithm import AlgorithmResponse
+from app.schemas.module1 import Module1RunRequest, Module1RunResponse
+from app.algorithms.module1 import run_linear_search, run_binary_search
 
 router = APIRouter()
 
@@ -34,6 +36,32 @@ def list_algorithms(
         algorithms = db.query(Algorithm).all()
 
     return algorithms
+
+
+@router.post(
+    "/module1/run",
+    response_model=Module1RunResponse,
+    summary="Run Module 1 algorithm (Linear or Binary Search) and return execution trace",
+)
+def run_module1_algorithm(request: Module1RunRequest) -> Module1RunResponse:
+    """Execute Linear Search or Binary Search and return a deterministic step trace."""
+    if request.algorithm == "linear":
+        result = run_linear_search(request.array, request.target)
+    elif request.algorithm == "binary":
+        try:
+            result = run_binary_search(request.array, request.target)
+        except ValueError as err:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=str(err),
+            )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Unsupported algorithm: {request.algorithm}",
+        )
+
+    return Module1RunResponse(**result)
 
 
 @router.get(
