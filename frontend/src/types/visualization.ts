@@ -191,3 +191,181 @@ export interface Module4RunResponse {
     total_steps: number;
   };
 }
+
+// ============================================================================
+// Module 5 Types (Dynamic Programming II: 0/1 Knapsack)
+// ============================================================================
+export interface KnapsackItem {
+  id: string;
+  weight: number;
+  value: number;
+}
+
+export type Module5Phase = 'init' | 'table_fill' | 'backtrack' | 'completed';
+
+export interface Module5Step {
+  phase: Module5Phase;
+  row: number;
+  col: number;
+  item_index: number | null;
+  item_weight: number | null;
+  item_value: number | null;
+  prev_dp: number | null;
+  candidate_val: number | null;
+  result_val: number;
+  included: boolean;
+  dp_table: number[][];
+  selected_items: number[];
+  running_weight: number;
+  running_value: number;
+  next_row?: number;
+  next_col?: number;
+  explanation: string;
+  metrics: {
+    max_value: number;
+    selected_count: number;
+    total_weight: number;
+    total_value: number;
+    current_step: number;
+  };
+}
+
+export interface Module5RunRequest {
+  items?: KnapsackItem[];
+  capacity?: number;
+}
+
+export interface Module5RunResponse {
+  steps: Module5Step[];
+  max_value: number;
+  selected_items: number[];
+  total_weight: number;
+  total_value: number;
+  dp_table: number[][];
+  items: KnapsackItem[];
+  capacity: number;
+  metrics: {
+    items_count: number;
+    capacity: number;
+    max_value: number;
+    selected_count: number;
+    total_weight: number;
+    total_value: number;
+    total_steps: number;
+  };
+}
+
+// ============================================================================
+// Module 6 Types (Greedy Method I: Job Sequencing)
+// ============================================================================
+export interface JobItem {
+  id: string;
+  deadline: number;
+  profit: number;
+}
+
+export type Module6Action =
+  'init' | 'sorted' | 'considering' | 'checking_slot' | 'assigned' | 'rejected' | 'completed';
+
+export interface TimelineSlot {
+  slot: number;
+  job_id: string | null;
+}
+
+export interface Module6Step {
+  action: Module6Action;
+  job: JobItem | null;
+  checked_slot: number | null;
+  timeline: TimelineSlot[];
+  running_profit: number;
+  scheduled_jobs: string[];
+  rejected_jobs: string[];
+  sorted_jobs: JobItem[];
+  explanation: string;
+  metrics: {
+    total_profit: number;
+    scheduled_count: number;
+    available_slots: number;
+    current_step: number;
+  };
+}
+
+export interface Module6RunRequest {
+  jobs?: JobItem[];
+  max_slots?: number;
+}
+
+export interface Module6RunResponse {
+  steps: Module6Step[];
+  scheduled_jobs: string[];
+  timeline: TimelineSlot[];
+  total_profit: number;
+  max_slots: number;
+  sorted_jobs: JobItem[];
+  metrics: {
+    total_jobs: number;
+    scheduled_count: number;
+    rejected_count: number;
+    total_profit: number;
+    slots_utilized: number;
+    total_slots: number;
+    total_steps: number;
+  };
+}
+
+// ============================================================================
+// Module 7 Types (Greedy Method II: Kruskal's MST)
+// ============================================================================
+export interface GraphEdge {
+  u: string;
+  v: string;
+  weight: number;
+  id?: string;
+}
+
+export type Module7Action =
+  'init' | 'sorted_edges' | 'checking' | 'added' | 'rejected' | 'completed';
+
+export interface Module7Step {
+  action: Module7Action;
+  current_edge: GraphEdge | null;
+  mst_edges: GraphEdge[];
+  rejected_edges: GraphEdge[];
+  running_weight: number;
+  components: string[][];
+  is_cycle: boolean;
+  sorted_edges: GraphEdge[];
+  explanation: string;
+  metrics: {
+    total_weight: number;
+    mst_edge_count: number;
+    edges_considered: number;
+    components_count: number;
+    current_step: number;
+  };
+}
+
+export interface Module7RunRequest {
+  vertices?: string[];
+  edges?: GraphEdge[];
+}
+
+export interface Module7RunResponse {
+  steps: Module7Step[];
+  mst_edges: GraphEdge[];
+  rejected_edges: GraphEdge[];
+  total_weight: number;
+  is_connected: boolean;
+  vertices: string[];
+  edges: GraphEdge[];
+  sorted_edges: GraphEdge[];
+  metrics: {
+    vertices_count: number;
+    edges_considered: number;
+    mst_edge_count: number;
+    total_mst_weight: number;
+    is_connected: boolean;
+    final_components_count: number;
+    total_steps: number;
+  };
+}

@@ -8,6 +8,9 @@ import { ComparisonArena } from '../components/visualizations/Module1/Comparison
 import { MergeSortTree } from '../components/visualizations/Module2';
 import { BacktrackingStage } from '../components/visualizations/Module3';
 import { FloydWarshallStage } from '../components/visualizations/Module4';
+import { KnapsackStage } from '../components/visualizations/Module5';
+import { JobSequencingStage } from '../components/visualizations/Module6';
+import { KruskalStage } from '../components/visualizations/Module7';
 
 export const ModulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -188,7 +191,7 @@ export const ModulePage: React.FC = () => {
         </div>
       )}
 
-      {/* Primary Workspace: Modules 1-4 Visualizers vs Placeholder for Modules 5-10 */}
+      {/* Primary Workspace: Modules 1-7 Visualizers vs Placeholder for Modules 8-10 */}
       {moduleData.id === 1 ? (
         <ComparisonArena />
       ) : moduleData.id === 2 ? (
@@ -197,6 +200,12 @@ export const ModulePage: React.FC = () => {
         <BacktrackingStage />
       ) : moduleData.id === 4 ? (
         <FloydWarshallStage />
+      ) : moduleData.id === 5 ? (
+        <KnapsackStage />
+      ) : moduleData.id === 6 ? (
+        <JobSequencingStage />
+      ) : moduleData.id === 7 ? (
+        <KruskalStage />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Visualization Area Placeholder */}

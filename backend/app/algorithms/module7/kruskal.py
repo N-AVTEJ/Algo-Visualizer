@@ -230,10 +230,6 @@ def run_kruskal(
                     "current_step": len(steps) + 1,
                 },
             })
-
-            # Early halt if MST already has V - 1 edges
-            if len(mst_edges) == v_count - 1:
-                break
         else:
             rejected_edges.append(dict(edge))
 
