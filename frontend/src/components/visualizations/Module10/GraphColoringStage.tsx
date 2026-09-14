@@ -96,8 +96,6 @@ export const GraphColoringStage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const activePreset = PRESETS[selectedPresetIdx];
-
   const handleRun = async (presetIdx: number = selectedPresetIdx) => {
     setError(null);
     setLoading(true);
@@ -141,23 +139,19 @@ export const GraphColoringStage: React.FC = () => {
     return traceData.steps[currentStepIndex] || null;
   }, [traceData, currentStepIndex]);
 
-  const metricsDisplay = useMemo(() => {
-    if (!traceData) return [];
-    return [
-      { label: 'Vertices Count (|V|)', value: traceData.metrics.vertices_count },
-      { label: 'Edges Count (|E|)', value: traceData.metrics.edges_count },
-      { label: 'Colors Attempted', value: traceData.metrics.colors_attempted },
-      { label: 'Conflicts Detected', value: traceData.metrics.conflicts_detected },
-      { label: 'Backtracks Performed', value: traceData.metrics.backtracks_performed },
-      {
-        label: 'Chromatic Number χ(G)',
-        value: traceData.chromatic_number > 0 ? traceData.chromatic_number : 'N/A',
-      },
-      {
-        label: 'Colorable',
-        value: traceData.is_colorable ? 'Valid Coloring Found' : 'Uncolorable',
-      },
-    ];
+  const steps = traceData?.steps ?? [];
+
+  const metricsDisplay: Record<string, string | number | boolean> = useMemo(() => {
+    if (!traceData) return {};
+    return {
+      'Vertices Count (|V|)': traceData.metrics.vertices_count,
+      'Edges Count (|E|)': traceData.metrics.edges_count,
+      'Colors Attempted': traceData.metrics.colors_attempted,
+      'Conflicts Detected': traceData.metrics.conflicts_detected,
+      'Backtracks Performed': traceData.metrics.backtracks_performed,
+      'Chromatic Number χ(G)': traceData.chromatic_number > 0 ? traceData.chromatic_number : 'N/A',
+      'Colorable': traceData.is_colorable ? 'Valid Coloring Found' : 'Uncolorable',
+    };
   }, [traceData]);
 
   return (
@@ -224,36 +218,46 @@ export const GraphColoringStage: React.FC = () => {
             chromaticNumber={traceData.chromatic_number}
           />
 
-          <AnimationPlayer
-            totalSteps={traceData.steps.length}
-            currentStep={currentStepIndex}
-            onStepChange={setCurrentStepIndex}
-            isPlaying={isPlaying}
-            onPlayPauseChange={setIsPlaying}
-            speed={speedMs}
-            onSpeedChange={setSpeedMs}
-          />
+            <AnimationPlayer
+              steps={steps}
+              currentStepIndex={currentStepIndex}
+              isPlaying={isPlaying}
+              onPlayToggle={(playing) => setIsPlaying(playing)}
+              onStepChange={(idx) => setCurrentStepIndex(idx)}
+              onReset={() => setCurrentStepIndex(0)}
+              initialSpeedMs={speedMs}
+              onSpeedChange={(spd) => setSpeedMs(spd)}
+            />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1">
-              <MetricsPanel title="Coloring Search Metrics" metrics={metricsDisplay} />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-1">
+                <MetricsPanel
+                  title="Coloring Search Metrics"
+                  complexity="O(k^V) backtracking"
+                  status={currentStep?.action === 'solution_found' ? 'found' : isPlaying ? 'searching' : 'idle'}
+                  statusMessage={
+                    currentStep?.action === 'solution_found'
+                      ? `Valid ${traceData.chromatic_number}-Coloring Found!`
+                      : currentStep?.action === 'conflict'
+                      ? `Conflict: ${currentStep.conflict_reason}`
+                      : currentStep?.action === 'backtrack'
+                      ? 'Backtracking to Previous Vertex Choice'
+                      : isPlaying
+                      ? 'Testing Color Assignments...'
+                      : 'Awaiting Graph Coloring'
+                  }
+                  metrics={metricsDisplay}
+                  accentColor="violet"
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <CodeDisplay
+                  title="Graph Coloring Backtracking"
+                  code={GRAPH_COLORING_CODE}
+                  language="python"
+                />
+              </div>
             </div>
-            <div className="lg:col-span-2">
-              <CodeDisplay
-                code={GRAPH_COLORING_CODE}
-                language="python"
-                highlightLines={
-                  currentStep?.action === 'conflict'
-                    ? [7, 8]
-                    : currentStep?.action === 'backtrack'
-                    ? [20, 21]
-                    : currentStep?.action === 'assigned'
-                    ? [17, 18]
-                    : [12, 13]
-                }
-              />
-            </div>
-          </div>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center p-12 text-center rounded-xl bg-slate-900/40 border border-dashed border-slate-800">

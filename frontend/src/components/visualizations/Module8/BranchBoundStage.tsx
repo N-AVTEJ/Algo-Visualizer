@@ -119,16 +119,22 @@ export const BranchBoundStage: React.FC = () => {
 
   const steps = traceData?.steps ?? [];
 
+  const currentStep: BranchBoundStep | null = useMemo(() => {
+    if (!traceData || traceData.steps.length === 0) return null;
+    return traceData.steps[currentStepIndex] || null;
+  }, [traceData, currentStepIndex]);
+
   const metricsDisplay: Record<string, string | number | boolean> = useMemo(() => {
-    if (!traceData) return {};
-    return {
-      'Nodes Created': traceData.metrics.nodes_created,
-      'Nodes Expanded': traceData.metrics.nodes_expanded,
-      'Nodes Pruned': traceData.metrics.nodes_pruned,
-      'Optimal Value': traceData.optimal_value,
-      'Final Weight': `${traceData.final_weight} / ${traceData.capacity}`,
-      'Max Search Depth': traceData.metrics.maximum_search_depth,
-    };
+    const m: Record<string, string | number | boolean> = {};
+    if (traceData) {
+      m['Nodes Created'] = traceData.metrics.nodes_created;
+      m['Nodes Expanded'] = traceData.metrics.nodes_expanded;
+      m['Nodes Pruned'] = traceData.metrics.nodes_pruned;
+      m['Optimal Value'] = traceData.optimal_value;
+      m['Final Weight'] = `${traceData.final_weight} / ${traceData.capacity}`;
+      m['Max Search Depth'] = traceData.metrics.maximum_search_depth;
+    }
+    return m;
   }, [traceData]);
 
   return (
