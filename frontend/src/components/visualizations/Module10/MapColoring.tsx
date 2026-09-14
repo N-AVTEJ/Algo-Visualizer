@@ -38,12 +38,13 @@ export const MapColoring: React.FC<MapColoringProps> = ({
 
   const currentVertex = step?.vertex ?? null;
   const currentAction = step?.action ?? null;
-  const partialColoring = step?.partial_coloring ?? {};
   const conflictingVertex = step?.conflicting_vertex ?? null;
   const conflictReason = step?.conflict_reason ?? null;
 
   useEffect(() => {
     if (!svgRef.current || vertices.length === 0) return;
+
+    const partialColoring = step?.partial_coloring ?? {};
 
     const width = 640;
     const height = 420;
@@ -257,7 +258,6 @@ export const MapColoring: React.FC<MapColoringProps> = ({
     currentVertex,
     conflictingVertex,
     currentAction,
-    partialColoring,
   ]);
 
   return (
