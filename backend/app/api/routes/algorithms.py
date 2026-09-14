@@ -16,10 +16,21 @@ from app.schemas.modules2_4 import (
     Module4RunRequest,
     Module4RunResponse,
 )
+from app.schemas.modules5_7 import (
+    Module5RunRequest,
+    Module5RunResponse,
+    Module6RunRequest,
+    Module6RunResponse,
+    Module7RunRequest,
+    Module7RunResponse,
+)
 from app.algorithms.module1 import run_linear_search, run_binary_search
 from app.algorithms.module2 import run_merge_sort, run_quick_sort
 from app.algorithms.module3 import run_n_queens
 from app.algorithms.module4 import run_floyd_warshall
+from app.algorithms.module5 import run_knapsack
+from app.algorithms.module6 import run_job_sequencing
+from app.algorithms.module7 import run_kruskal
 
 router = APIRouter()
 
@@ -135,6 +146,81 @@ def run_module4_algorithm(request: Module4RunRequest) -> Module4RunResponse:
         )
 
     return Module4RunResponse(**result)
+
+
+@router.post(
+    "/module5/run",
+    response_model=Module5RunResponse,
+    summary="Run Module 5 algorithm (0/1 Knapsack) and return DP table & backtracking trace",
+)
+def run_module5_algorithm(request: Module5RunRequest) -> Module5RunResponse:
+    """Execute 0/1 Knapsack DP algorithm with complete table fill and backtracking trace."""
+    items_list = None
+    if request.items is not None:
+        items_list = [item.model_dump() for item in request.items]
+
+    try:
+        result = run_knapsack(
+            items=items_list,
+            capacity=request.capacity,
+        )
+    except ValueError as err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(err),
+        )
+
+    return Module5RunResponse(**result)
+
+
+@router.post(
+    "/module6/run",
+    response_model=Module6RunResponse,
+    summary="Run Module 6 algorithm (Job Sequencing with Deadlines) and return timeline trace",
+)
+def run_module6_algorithm(request: Module6RunRequest) -> Module6RunResponse:
+    """Execute Job Sequencing with Deadlines greedy algorithm with slot allocation trace."""
+    jobs_list = None
+    if request.jobs is not None:
+        jobs_list = [job.model_dump() for job in request.jobs]
+
+    try:
+        result = run_job_sequencing(
+            jobs=jobs_list,
+            max_slots=request.max_slots,
+        )
+    except ValueError as err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(err),
+        )
+
+    return Module6RunResponse(**result)
+
+
+@router.post(
+    "/module7/run",
+    response_model=Module7RunResponse,
+    summary="Run Module 7 algorithm (Kruskal's MST) and return cycle-detection and edge trace",
+)
+def run_module7_algorithm(request: Module7RunRequest) -> Module7RunResponse:
+    """Execute Kruskal's Minimum Spanning Tree algorithm with Disjoint Set Union decision trace."""
+    edges_list = None
+    if request.edges is not None:
+        edges_list = [edge.model_dump() for edge in request.edges]
+
+    try:
+        result = run_kruskal(
+            vertices=request.vertices,
+            edges=edges_list,
+        )
+    except ValueError as err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(err),
+        )
+
+    return Module7RunResponse(**result)
 
 
 @router.get(
