@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import {
   AlertTriangle,
   ArrowLeft,
-  BookOpen,
   Code2,
   Cpu,
   Layers,
