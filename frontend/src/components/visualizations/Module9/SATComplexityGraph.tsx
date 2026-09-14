@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { AlertTriangle, TrendingUp, Cpu } from 'lucide-react';
+import { AlertTriangle, TrendingUp } from 'lucide-react';
 
 export const SATComplexityGraph: React.FC = () => {
   const [nValue, setNValue] = useState<number>(10);
@@ -56,7 +56,8 @@ export const SATComplexityGraph: React.FC = () => {
       .call(
         d3
           .axisLeft(yScale)
-          .ticks(5, (d) => `10^${Math.round(Math.log10(d as number))}`)
+          .ticks(5)
+          .tickFormat((d) => `10^${Math.round(Math.log10(Number(d)))}`)
       )
       .attr('color', '#64748b')
       .selectAll('text')

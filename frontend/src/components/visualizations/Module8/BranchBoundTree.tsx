@@ -35,8 +35,6 @@ export const BranchBoundTree: React.FC<BranchBoundTreeProps> = ({
 
     // If step is provided, highlight current node
     const currentNodeId = step?.node_id ?? 'node_0';
-    const currentBestValue = step?.best_value ?? 0;
-    const currentBestItems = step?.best_selected_items ?? [];
 
     // Map all nodes by id
     const nodeMap = new Map<string, BranchBoundNode>();

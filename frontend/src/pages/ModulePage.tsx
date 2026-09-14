@@ -11,6 +11,9 @@ import { FloydWarshallStage } from '../components/visualizations/Module4';
 import { KnapsackStage } from '../components/visualizations/Module5';
 import { JobSequencingStage } from '../components/visualizations/Module6';
 import { KruskalStage } from '../components/visualizations/Module7';
+import { BranchBoundStage } from '../components/visualizations/Module8';
+import { SatStage } from '../components/visualizations/Module9';
+import { GraphColoringStage } from '../components/visualizations/Module10';
 
 export const ModulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -191,7 +194,7 @@ export const ModulePage: React.FC = () => {
         </div>
       )}
 
-      {/* Primary Workspace: Modules 1-7 Visualizers vs Placeholder for Modules 8-10 */}
+      {/* Primary Workspace: Modules 1-10 Visualizers */}
       {moduleData.id === 1 ? (
         <ComparisonArena />
       ) : moduleData.id === 2 ? (
@@ -206,6 +209,12 @@ export const ModulePage: React.FC = () => {
         <JobSequencingStage />
       ) : moduleData.id === 7 ? (
         <KruskalStage />
+      ) : moduleData.id === 8 ? (
+        <BranchBoundStage />
+      ) : moduleData.id === 9 ? (
+        <SatStage />
+      ) : moduleData.id === 10 ? (
+        <GraphColoringStage />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Visualization Area Placeholder */}

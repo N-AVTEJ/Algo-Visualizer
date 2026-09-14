@@ -80,8 +80,6 @@ export const BranchBoundStage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const activePreset = PRESETS[selectedPresetIdx];
-
   const handleRun = async (presetIdx: number = selectedPresetIdx) => {
     setError(null);
     setLoading(true);
@@ -119,21 +117,18 @@ export const BranchBoundStage: React.FC = () => {
     setCurrentStepIndex(0);
   };
 
-  const currentStep: BranchBoundStep | null = useMemo(() => {
-    if (!traceData || traceData.steps.length === 0) return null;
-    return traceData.steps[currentStepIndex] || null;
-  }, [traceData, currentStepIndex]);
+  const steps = traceData?.steps ?? [];
 
-  const metricsDisplay = useMemo(() => {
-    if (!traceData) return [];
-    return [
-      { label: 'Nodes Created', value: traceData.metrics.nodes_created },
-      { label: 'Nodes Expanded', value: traceData.metrics.nodes_expanded },
-      { label: 'Nodes Pruned', value: traceData.metrics.nodes_pruned },
-      { label: 'Optimal Value', value: traceData.optimal_value },
-      { label: 'Final Weight', value: `${traceData.final_weight} / ${traceData.capacity}` },
-      { label: 'Max Depth', value: traceData.metrics.maximum_search_depth },
-    ];
+  const metricsDisplay: Record<string, string | number | boolean> = useMemo(() => {
+    if (!traceData) return {};
+    return {
+      'Nodes Created': traceData.metrics.nodes_created,
+      'Nodes Expanded': traceData.metrics.nodes_expanded,
+      'Nodes Pruned': traceData.metrics.nodes_pruned,
+      'Optimal Value': traceData.optimal_value,
+      'Final Weight': `${traceData.final_weight} / ${traceData.capacity}`,
+      'Max Search Depth': traceData.metrics.maximum_search_depth,
+    };
   }, [traceData]);
 
   return (
@@ -191,7 +186,7 @@ export const BranchBoundStage: React.FC = () => {
       )}
 
       {/* Main Interactive Stage */}
-      {traceData ? (
+      {traceData && steps.length > 0 ? (
         <div className="space-y-6">
           <BranchBoundTree
             step={currentStep}
@@ -201,30 +196,40 @@ export const BranchBoundStage: React.FC = () => {
           />
 
           <AnimationPlayer
-            totalSteps={traceData.steps.length}
-            currentStep={currentStepIndex}
-            onStepChange={setCurrentStepIndex}
+            steps={steps}
+            currentStepIndex={currentStepIndex}
             isPlaying={isPlaying}
-            onPlayPauseChange={setIsPlaying}
-            speed={speedMs}
-            onSpeedChange={setSpeedMs}
+            onPlayToggle={(playing) => setIsPlaying(playing)}
+            onStepChange={(idx) => setCurrentStepIndex(idx)}
+            onReset={() => setCurrentStepIndex(0)}
+            initialSpeedMs={speedMs}
+            onSpeedChange={(spd) => setSpeedMs(spd)}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-1">
-              <MetricsPanel title="Search Tree Metrics" metrics={metricsDisplay} />
+              <MetricsPanel
+                title="Search Tree Metrics"
+                complexity="O(2^n) branch & bound"
+                status={currentStep?.action === 'solution_candidate' || currentStep?.action === 'best_solution_updated' ? 'found' : isPlaying ? 'searching' : 'idle'}
+                statusMessage={
+                  currentStep?.action === 'best_solution_updated'
+                    ? `Optimal Solution: Value ${currentStep.best_value}`
+                    : currentStep?.action === 'branch_pruned'
+                    ? `Pruned: ${currentStep.prune_reason}`
+                    : isPlaying
+                    ? 'Exploring State-Space Tree...'
+                    : 'Awaiting Exploration'
+                }
+                metrics={metricsDisplay}
+                accentColor="amber"
+              />
             </div>
             <div className="lg:col-span-2">
               <CodeDisplay
+                title="Branch & Bound 0/1 Knapsack"
                 code={BB_KNAPSACK_CODE}
                 language="python"
-                highlightLines={
-                  currentStep?.action === 'branch_pruned'
-                    ? [22, 23]
-                    : currentStep?.action === 'best_solution_updated'
-                    ? [24, 25]
-                    : [18, 19]
-                }
               />
             </div>
           </div>
