@@ -14,9 +14,12 @@ export const ComparePage: React.FC = () => {
           <Sparkles className="w-3.5 h-3.5 text-violet-400" />
           <span>Feature Placeholder &bull; Comparative Analysis</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Algorithm Comparison Stage</h1>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
+          Algorithm Comparison Stage
+        </h1>
         <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto leading-relaxed">
-          Side-by-side multi-algorithm execution and telemetry comparison will be unlocked in later phases.
+          Side-by-side multi-algorithm execution and telemetry comparison will be unlocked in later
+          phases.
         </p>
       </div>
 

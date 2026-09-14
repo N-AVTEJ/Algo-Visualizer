@@ -87,7 +87,9 @@ export async function apiClient<T>(endpoint: string, options: RequestOptions = {
       if (typeof parsed.detail === 'string') {
         errorMessage = parsed.detail;
       } else if (Array.isArray(parsed.detail)) {
-        errorMessage = parsed.detail.map((d: { msg?: string }) => d.msg || 'Validation error').join(', ');
+        errorMessage = parsed.detail
+          .map((d: { msg?: string }) => d.msg || 'Validation error')
+          .join(', ');
       }
     } catch {
       // Non-JSON response body

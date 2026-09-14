@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Play, Activity, ShieldCheck, ArrowRight, BookOpen, GitCompare, RefreshCw, AlertTriangle } from 'lucide-react';
+import {
+  Play,
+  Activity,
+  ShieldCheck,
+  ArrowRight,
+  BookOpen,
+  GitCompare,
+  RefreshCw,
+  AlertTriangle,
+} from 'lucide-react';
 import { modulesApi } from '../api/client';
 import { useModuleStore } from '../store/moduleStore';
 import type { Module } from '../types';
@@ -141,7 +150,8 @@ export const HomePage: React.FC = () => {
           </div>
           <h3 className="text-base font-semibold text-white mb-2">Step Timeline Engine</h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Deterministic step controls allowing forward and backward scrubbing with speed adjustment.
+            Deterministic step controls allowing forward and backward scrubbing with speed
+            adjustment.
           </p>
         </div>
 

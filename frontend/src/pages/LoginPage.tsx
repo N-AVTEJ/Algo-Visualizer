@@ -62,7 +62,10 @@ export const LoginPage: React.FC = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="login-email" className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label
+                htmlFor="login-email"
+                className="block text-xs font-semibold text-slate-300 mb-1.5"
+              >
                 Email address
               </label>
               <input
@@ -77,7 +80,10 @@ export const LoginPage: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="login-password" className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label
+                htmlFor="login-password"
+                className="block text-xs font-semibold text-slate-300 mb-1.5"
+              >
                 Password
               </label>
               <input

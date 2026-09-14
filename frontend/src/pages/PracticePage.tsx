@@ -18,13 +18,15 @@ export const PracticePage: React.FC = () => {
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Algorithm Practice Arena</h1>
         <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto leading-relaxed">
-          Interactive trace problems, quizzes, and code challenges will be integrated in subsequent phases.
+          Interactive trace problems, quizzes, and code challenges will be integrated in subsequent
+          phases.
         </p>
       </div>
 
       <div className="p-8 rounded-2xl bg-slate-900/50 border-2 border-dashed border-slate-800 max-w-2xl mx-auto text-slate-400 text-sm">
         <p className="mb-4">
-          Test your mastery of algorithmic state transitions, recursion invariants, and loop boundaries.
+          Test your mastery of algorithmic state transitions, recursion invariants, and loop
+          boundaries.
         </p>
         <Link
           to="/"

@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Code2,
-  Cpu,
-  Layers,
-  RefreshCw,
-  Sparkles,
-} from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Code2, Cpu, Layers, RefreshCw, Sparkles } from 'lucide-react';
 import { modulesApi, algorithmsApi } from '../api/client';
 import { useModuleStore } from '../store/moduleStore';
 import type { Algorithm, Module } from '../types';
@@ -219,8 +211,8 @@ export const ModulePage: React.FC = () => {
           <div>
             <h3 className="text-base font-bold text-white mb-1">Metrics Panel</h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Telemetry counters (comparisons, memory allocations, operations) will be connected here
-              during visualization engine integration.
+              Telemetry counters (comparisons, memory allocations, operations) will be connected
+              here during visualization engine integration.
             </p>
           </div>
           <div className="px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 text-xs font-mono">
