@@ -9,6 +9,8 @@ import type {
   User,
   UserProgress,
   UserProgressCreate,
+  Module1RunRequest,
+  Module1Trace,
 } from '../types';
 
 export const API_BASE_URL =
@@ -141,6 +143,12 @@ export const algorithmsApi = {
   },
 
   getById: (id: number | string): Promise<Algorithm> => apiClient<Algorithm>(`/algorithms/${id}`),
+
+  runModule1: (data: Module1RunRequest): Promise<Module1Trace> =>
+    apiClient<Module1Trace>('/algorithms/module1/run', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
 };
 
 // User Progress API
