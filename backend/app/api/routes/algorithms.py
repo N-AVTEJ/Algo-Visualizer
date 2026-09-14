@@ -24,6 +24,14 @@ from app.schemas.modules5_7 import (
     Module7RunRequest,
     Module7RunResponse,
 )
+from app.schemas.modules8_10 import (
+    Module8RunRequest,
+    Module8RunResponse,
+    Module9RunRequest,
+    Module9RunResponse,
+    Module10RunRequest,
+    Module10RunResponse,
+)
 from app.algorithms.module1 import run_linear_search, run_binary_search
 from app.algorithms.module2 import run_merge_sort, run_quick_sort
 from app.algorithms.module3 import run_n_queens
@@ -31,6 +39,9 @@ from app.algorithms.module4 import run_floyd_warshall
 from app.algorithms.module5 import run_knapsack
 from app.algorithms.module6 import run_job_sequencing
 from app.algorithms.module7 import run_kruskal
+from app.algorithms.module8 import run_branch_bound
+from app.algorithms.module9 import run_sat_solver
+from app.algorithms.module10 import run_graph_coloring
 
 router = APIRouter()
 
@@ -221,6 +232,80 @@ def run_module7_algorithm(request: Module7RunRequest) -> Module7RunResponse:
         )
 
     return Module7RunResponse(**result)
+
+
+@router.post(
+    "/module8/run",
+    response_model=Module8RunResponse,
+    summary="Run Module 8 algorithm (Branch & Bound 0/1 Knapsack) and return state-space tree trace",
+)
+def run_module8_algorithm(request: Module8RunRequest) -> Module8RunResponse:
+    """Execute 0/1 Knapsack Branch & Bound algorithm with deterministic state-space tree trace."""
+    items_list = None
+    if request.items is not None:
+        items_list = [item.model_dump() for item in request.items]
+
+    try:
+        result = run_branch_bound(
+            items=items_list,
+            capacity=request.capacity,
+        )
+    except ValueError as err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(err),
+        )
+
+    return Module8RunResponse(**result)
+
+
+@router.post(
+    "/module9/run",
+    response_model=Module9RunResponse,
+    summary="Run Module 9 algorithm (Brute-Force SAT Solver) and return truth table trace",
+)
+def run_module9_algorithm(request: Module9RunRequest) -> Module9RunResponse:
+    """Execute Brute-force SAT solver enumerating assignments with clause evaluation trace."""
+    try:
+        result = run_sat_solver(
+            variables=request.variables,
+            clauses=request.clauses,
+            stop_on_first_satisfying=request.stop_on_first_satisfying if request.stop_on_first_satisfying is not None else True,
+        )
+    except ValueError as err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(err),
+        )
+
+    return Module9RunResponse(**result)
+
+
+@router.post(
+    "/module10/run",
+    response_model=Module10RunResponse,
+    summary="Run Module 10 algorithm (Graph Coloring Backtracking) and return search trace",
+)
+def run_module10_algorithm(request: Module10RunRequest) -> Module10RunResponse:
+    """Execute Graph Coloring backtracking algorithm with conflict detection and chromatic number trace."""
+    edges_list = None
+    if request.edges is not None:
+        edges_list = [edge.model_dump() for edge in request.edges]
+
+    try:
+        result = run_graph_coloring(
+            vertices=request.vertices,
+            edges=edges_list,
+            max_colors=request.max_colors,
+        )
+    except ValueError as err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(err),
+        )
+
+    return Module10RunResponse(**result)
+
 
 
 @router.get(
