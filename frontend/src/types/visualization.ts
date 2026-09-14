@@ -1,9 +1,14 @@
 // Generic Visualization Trace & Module 1 Step Contracts
 
-export interface VisualizationTrace<TStep = unknown, TMetrics = Record<string, number | string>> {
+export type MetricValue = number | string | boolean;
+
+export interface VisualizationTrace<
+  TStep = unknown,
+  TMetrics extends Record<string, MetricValue> = Record<string, MetricValue>,
+> {
   steps: TStep[];
-  comparisons: number;
-  result_index: number;
+  comparisons?: number;
+  result_index?: number;
   metrics?: TMetrics;
 }
 

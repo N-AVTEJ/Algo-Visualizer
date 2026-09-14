@@ -57,7 +57,7 @@ export const ComplexityGraph: React.FC<ComplexityGraphProps> = ({ currentN }) =>
       .call(
         makeXGrid()
           .tickSize(-innerHeight)
-          .tickFormat(() => ''),
+          .tickFormat(() => '')
       )
       .selectAll('line')
       .attr('stroke', '#1e293b')
@@ -68,7 +68,7 @@ export const ComplexityGraph: React.FC<ComplexityGraphProps> = ({ currentN }) =>
       .call(
         makeYGrid()
           .tickSize(-innerWidth)
-          .tickFormat(() => ''),
+          .tickFormat(() => '')
       )
       .selectAll('line')
       .attr('stroke', '#1e293b')

@@ -4,6 +4,7 @@ import { AlertTriangle, ArrowLeft, Code2, Cpu, Layers, RefreshCw, Sparkles } fro
 import { modulesApi, algorithmsApi } from '../api/client';
 import { useModuleStore } from '../store/moduleStore';
 import type { Algorithm, Module } from '../types';
+import { ComparisonArena } from '../components/visualizations/Module1/ComparisonArena';
 
 export const ModulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -184,42 +185,46 @@ export const ModulePage: React.FC = () => {
         </div>
       )}
 
-      {/* Primary Workspace Grid: Visualization Area Placeholder & Metrics Placeholder */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Visualization Area Placeholder */}
-        <div className="lg:col-span-3 min-h-[380px] p-8 rounded-2xl bg-slate-900/50 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
-          <div className="w-16 h-16 rounded-2xl bg-violet-950/40 border border-violet-800/40 text-violet-400 flex items-center justify-center">
-            <Sparkles className="w-8 h-8" />
+      {/* Primary Workspace: Module 1 Comparison Arena vs Placeholder for other modules */}
+      {moduleData.id === 1 ? (
+        <ComparisonArena />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Visualization Area Placeholder */}
+          <div className="lg:col-span-3 min-h-[380px] p-8 rounded-2xl bg-slate-900/50 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-violet-950/40 border border-violet-800/40 text-violet-400 flex items-center justify-center">
+              <Sparkles className="w-8 h-8" />
+            </div>
+            <div className="max-w-md">
+              <h3 className="text-lg font-bold text-white mb-1">Visualization Area</h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Interactive visualization canvas with step-by-step playback engine will be
+                implemented in subsequent phases for this module.
+              </p>
+            </div>
+            <div className="px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-slate-400 text-xs font-mono">
+              Module {moduleData.order_index} Stage &bull; Visualization Engine Scheduled
+            </div>
           </div>
-          <div className="max-w-md">
-            <h3 className="text-lg font-bold text-white mb-1">Visualization Area</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              Interactive visualization canvas with step-by-step playback engine will be implemented
-              in the upcoming phase.
-            </p>
-          </div>
-          <div className="px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-slate-400 text-xs font-mono">
-            Phase 4 Placeholder &bull; Visualizer Canvas Scheduled Next
-          </div>
-        </div>
 
-        {/* Metrics Panel Placeholder */}
-        <div className="lg:col-span-1 min-h-[380px] p-6 rounded-2xl bg-slate-900/50 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
-          <div className="w-12 h-12 rounded-xl bg-indigo-950/40 border border-indigo-800/40 text-indigo-400 flex items-center justify-center">
-            <Cpu className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="text-base font-bold text-white mb-1">Metrics Panel</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Telemetry counters (comparisons, memory allocations, operations) will be connected
-              here during visualization engine integration.
-            </p>
-          </div>
-          <div className="px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 text-xs font-mono">
-            Telemetry Idle
+          {/* Metrics Panel Placeholder */}
+          <div className="lg:col-span-1 min-h-[380px] p-6 rounded-2xl bg-slate-900/50 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-indigo-950/40 border border-indigo-800/40 text-indigo-400 flex items-center justify-center">
+              <Cpu className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-white mb-1">Metrics Panel</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Telemetry counters (comparisons, memory allocations, operations) will be connected
+                here during visualization engine integration.
+              </p>
+            </div>
+            <div className="px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 text-xs font-mono">
+              Telemetry Idle
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
