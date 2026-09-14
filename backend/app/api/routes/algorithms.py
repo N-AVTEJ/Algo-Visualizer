@@ -8,7 +8,18 @@ from app.models.algorithm import Algorithm
 from app.models.module import Module
 from app.schemas.algorithm import AlgorithmResponse
 from app.schemas.module1 import Module1RunRequest, Module1RunResponse
+from app.schemas.modules2_4 import (
+    Module2RunRequest,
+    Module2RunResponse,
+    Module3RunRequest,
+    Module3RunResponse,
+    Module4RunRequest,
+    Module4RunResponse,
+)
 from app.algorithms.module1 import run_linear_search, run_binary_search
+from app.algorithms.module2 import run_merge_sort, run_quick_sort
+from app.algorithms.module3 import run_n_queens
+from app.algorithms.module4 import run_floyd_warshall
 
 router = APIRouter()
 
@@ -62,6 +73,68 @@ def run_module1_algorithm(request: Module1RunRequest) -> Module1RunResponse:
         )
 
     return Module1RunResponse(**result)
+
+
+@router.post(
+    "/module2/run",
+    response_model=Module2RunResponse,
+    summary="Run Module 2 algorithm (Merge Sort or Quick Sort) and return execution trace",
+)
+def run_module2_algorithm(request: Module2RunRequest) -> Module2RunResponse:
+    """Execute Merge Sort or Quick Sort and return a deterministic step trace."""
+    if request.algorithm == "merge_sort":
+        result = run_merge_sort(request.array)
+    elif request.algorithm == "quick_sort":
+        result = run_quick_sort(request.array)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Unsupported algorithm: {request.algorithm}",
+        )
+
+    return Module2RunResponse(**result)
+
+
+@router.post(
+    "/module3/run",
+    response_model=Module3RunResponse,
+    summary="Run Module 3 algorithm (N-Queens) and return search and backtracking trace",
+)
+def run_module3_algorithm(request: Module3RunRequest) -> Module3RunResponse:
+    """Execute N-Queens backtracking and return a step trace of attempts, placements, and backtracks."""
+    try:
+        result = run_n_queens(
+            n=request.n,
+            stop_at_first_solution=request.stop_at_first_solution,
+        )
+    except ValueError as err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(err),
+        )
+
+    return Module3RunResponse(**result)
+
+
+@router.post(
+    "/module4/run",
+    response_model=Module4RunResponse,
+    summary="Run Module 4 algorithm (Floyd-Warshall) and return (k, i, j) relaxation trace",
+)
+def run_module4_algorithm(request: Module4RunRequest) -> Module4RunResponse:
+    """Execute Floyd-Warshall all-pairs shortest paths algorithm with relaxation step trace."""
+    try:
+        result = run_floyd_warshall(
+            matrix=request.matrix,
+            labels=request.labels,
+        )
+    except ValueError as err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(err),
+        )
+
+    return Module4RunResponse(**result)
 
 
 @router.get(
