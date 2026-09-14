@@ -34,7 +34,10 @@ export const Chessboard: React.FC<ChessboardProps> = ({ step, n = 8 }) => {
           {/* Left Rank Labels (8 down to 1) */}
           <div className="flex flex-col justify-around pr-2 text-right">
             {Array.from({ length: n }, (_, r) => n - r).map((rank) => (
-              <span key={rank} className="text-[11px] font-mono font-bold text-slate-500 h-9 sm:h-11 flex items-center justify-end">
+              <span
+                key={rank}
+                className="text-[11px] font-mono font-bold text-slate-500 h-9 sm:h-11 flex items-center justify-end"
+              >
                 {rank}
               </span>
             ))}
@@ -136,7 +139,8 @@ export const Chessboard: React.FC<ChessboardProps> = ({ step, n = 8 }) => {
               </span>
             ) : step?.action === 'place' ? (
               <span className="text-emerald-300">
-                Placed queen safely at ({colLabels[currentTryCol] || currentTryCol}, {n - currentTryRow}).
+                Placed queen safely at ({colLabels[currentTryCol] || currentTryCol},{' '}
+                {n - currentTryRow}).
               </span>
             ) : (
               <span className="text-slate-400">Search ready.</span>

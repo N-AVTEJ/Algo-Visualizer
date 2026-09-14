@@ -10,7 +10,7 @@ interface DecisionTreeProps {
 interface D3TreeNode {
   id: string;
   name: string;
-  status: 'root' | 'placed' | 'conflict' | 'backtracked' | 'solution';
+  status: 'root' | 'placed' | 'conflict' | 'backtracked' | 'solution' | 'exploring';
   row: number;
   col: number;
   isCurrent: boolean;
@@ -58,7 +58,7 @@ export const DecisionTree: React.FC<DecisionTreeProps> = ({ steps, currentStepIn
         nodeMap.set(s.node_id, existing);
 
         const parentId = s.parent_id && nodeMap.has(s.parent_id) ? s.parent_id : 'root';
-        const parent = nodeMap.get(parentId)!;
+        const parent = nodeMap.get(parentId) ?? rootNode;
         if (!parent.children) parent.children = [];
         parent.children.push(existing);
       } else {
@@ -100,10 +100,14 @@ export const DecisionTree: React.FC<DecisionTreeProps> = ({ steps, currentStepIn
       .append('path')
       .attr('class', 'tree-link')
       .attr('d', (d) => {
-        return `M${d.source.x},${d.source.y}
-                C${d.source.x},${(d.source.y + d.target.y) / 2}
-                 ${d.target.x},${(d.source.y + d.target.y) / 2}
-                 ${d.target.x},${d.target.y}`;
+        const sx = d.source.x ?? 0;
+        const sy = d.source.y ?? 0;
+        const tx = d.target.x ?? 0;
+        const ty = d.target.y ?? 0;
+        return `M${sx},${sy}
+                C${sx},${(sy + ty) / 2}
+                 ${tx},${(sy + ty) / 2}
+                 ${tx},${ty}`;
       })
       .attr('fill', 'none')
       .attr('stroke', (d) => {

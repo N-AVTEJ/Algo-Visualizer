@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import * as d3 from 'd3';
-import { motion, AnimatePresence } from 'framer-motion';
 import { GitBranch, Play, AlertTriangle, Layers, ArrowDownUp } from 'lucide-react';
 import { algorithmsApi, ApiError } from '../../../api/client';
 import type { Module2Step, Module2RunResponse } from '../../../types';
@@ -137,7 +136,7 @@ export const MergeSortTree: React.FC = () => {
     }
   };
 
-  const steps = traceData?.steps || [];
+  const steps = useMemo(() => traceData?.steps || [], [traceData]);
   const currentStep: Module2Step | null = steps[currentStepIndex] || null;
 
   // Build recursive tree hierarchy for Merge Sort
@@ -157,10 +156,7 @@ export const MergeSortTree: React.FC = () => {
         right,
         depth,
         initialSubArray: sub,
-        children: [
-          buildNode(left, mid, depth + 1),
-          buildNode(mid + 1, right, depth + 1),
-        ],
+        children: [buildNode(left, mid, depth + 1), buildNode(mid + 1, right, depth + 1)],
       };
     }
 
@@ -169,11 +165,14 @@ export const MergeSortTree: React.FC = () => {
 
   // Determine state of each node based on steps up to currentStepIndex
   const nodeStates = useMemo(() => {
-    const states: Record<string, {
-      status: 'unreached' | 'active_split' | 'active_merge' | 'merged';
-      displayArray: number[];
-      isCurrentActive: boolean;
-    }> = {};
+    const states: Record<
+      string,
+      {
+        status: 'unreached' | 'active_split' | 'active_merge' | 'merged';
+        displayArray: number[];
+        isCurrentActive: boolean;
+      }
+    > = {};
 
     if (!traceData || steps.length === 0) return states;
 
@@ -248,10 +247,14 @@ export const MergeSortTree: React.FC = () => {
       .append('path')
       .attr('class', 'link')
       .attr('d', (d) => {
-        return `M${d.source.x},${d.source.y + 20}
-                C${d.source.x},${(d.source.y + d.target.y) / 2}
-                 ${d.target.x},${(d.source.y + d.target.y) / 2}
-                 ${d.target.x},${d.target.y - 18}`;
+        const sx = d.source.x ?? 0;
+        const sy = d.source.y ?? 0;
+        const tx = d.target.x ?? 0;
+        const ty = d.target.y ?? 0;
+        return `M${sx},${sy + 20}
+                C${sx},${(sy + ty) / 2}
+                 ${tx},${(sy + ty) / 2}
+                 ${tx},${ty - 18}`;
       })
       .attr('fill', 'none')
       .attr('stroke', (d) => {
@@ -439,7 +442,11 @@ export const MergeSortTree: React.FC = () => {
               className="px-6 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow-lg shadow-amber-500/20 transition-all inline-flex items-center space-x-2 disabled:opacity-50"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
-              <span>{loading ? 'Running Trace...' : `Execute ${selectedAlgo === 'merge_sort' ? 'Merge Sort' : 'Quick Sort'}`}</span>
+              <span>
+                {loading
+                  ? 'Running Trace...'
+                  : `Execute ${selectedAlgo === 'merge_sort' ? 'Merge Sort' : 'Quick Sort'}`}
+              </span>
             </button>
           </div>
         </div>
@@ -516,7 +523,9 @@ export const MergeSortTree: React.FC = () => {
                   <span>Sorted</span>
                 </span>
               </div>
-              <span className="text-[11px] text-slate-500 font-mono">D3.js Recursive Tree Canvas</span>
+              <span className="text-[11px] text-slate-500 font-mono">
+                D3.js Recursive Tree Canvas
+              </span>
             </div>
 
             <div className="w-full overflow-x-auto flex justify-center py-2">
@@ -537,7 +546,8 @@ export const MergeSortTree: React.FC = () => {
 
                     let bg = 'bg-slate-900 border-slate-800 text-slate-400';
                     if (isPlaced) {
-                      bg = 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold scale-110';
+                      bg =
+                        'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold scale-110';
                     } else if (isComparing) {
                       bg = 'bg-purple-500/20 border-purple-400 text-purple-300 font-bold scale-110';
                     } else if (isInRange) {
@@ -546,7 +556,9 @@ export const MergeSortTree: React.FC = () => {
 
                     return (
                       <div key={idx} className="flex flex-col items-center">
-                        <div className={`w-10 h-10 rounded-xl border-2 flex items-center justify-center font-mono text-xs transition-all ${bg}`}>
+                        <div
+                          className={`w-10 h-10 rounded-xl border-2 flex items-center justify-center font-mono text-xs transition-all ${bg}`}
+                        >
                           {val}
                         </div>
                         <span className="text-[9px] font-mono text-slate-500 mt-1">[{idx}]</span>
@@ -563,9 +575,13 @@ export const MergeSortTree: React.FC = () => {
             <div className="flex items-center justify-between text-xs text-slate-400">
               <span className="flex items-center space-x-1.5">
                 <ArrowDownUp className="w-4 h-4 text-sky-400" />
-                <span className="font-semibold text-slate-200">Lomuto Partition Scheme Visualization</span>
+                <span className="font-semibold text-slate-200">
+                  Lomuto Partition Scheme Visualization
+                </span>
               </span>
-              <span className="text-[11px] text-slate-500 font-mono">Pivot &amp; Two-Pointer Partitioning</span>
+              <span className="text-[11px] text-slate-500 font-mono">
+                Pivot &amp; Two-Pointer Partitioning
+              </span>
             </div>
 
             <div className="flex flex-wrap gap-2 justify-center py-6">
@@ -573,11 +589,14 @@ export const MergeSortTree: React.FC = () => {
                 const isPivot = currentStep?.pivot_index === idx;
                 const isI = currentStep?.i === idx;
                 const isJ = currentStep?.j === idx;
-                const isInSubarray = currentStep ? idx >= currentStep.left && idx <= currentStep.right : true;
+                const isInSubarray = currentStep
+                  ? idx >= currentStep.left && idx <= currentStep.right
+                  : true;
 
                 let borderStyle = 'border-slate-800 bg-slate-900 text-slate-400';
                 if (isPivot) {
-                  borderStyle = 'border-amber-400 bg-amber-500/20 text-amber-300 font-bold scale-110 shadow-lg shadow-amber-500/20';
+                  borderStyle =
+                    'border-amber-400 bg-amber-500/20 text-amber-300 font-bold scale-110 shadow-lg shadow-amber-500/20';
                 } else if (isJ) {
                   borderStyle = 'border-sky-400 bg-sky-500/20 text-sky-300 font-bold scale-105';
                 } else if (isI) {
@@ -595,7 +614,9 @@ export const MergeSortTree: React.FC = () => {
                       {isI && !isPivot && !isJ && <span className="text-purple-400">i</span>}
                     </div>
 
-                    <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl border-2 flex items-center justify-center font-mono text-sm transition-all ${borderStyle}`}>
+                    <div
+                      className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl border-2 flex items-center justify-center font-mono text-sm transition-all ${borderStyle}`}
+                    >
                       {val}
                     </div>
                     <span className="text-[9px] font-mono text-slate-500 mt-1">[{idx}]</span>
@@ -609,10 +630,14 @@ export const MergeSortTree: React.FC = () => {
               {currentStep ? (
                 <span>
                   Indices [{currentStep.left} .. {currentStep.right}], Pivot ={' '}
-                  <span className="font-mono font-bold text-amber-300">{currentStep.pivot_value ?? 'N/A'}</span>.
+                  <span className="font-mono font-bold text-amber-300">
+                    {currentStep.pivot_value ?? 'N/A'}
+                  </span>
+                  .
                   {currentStep.action === 'compare' && (
                     <span className="ml-2 text-sky-300">
-                      Comparing arr[{currentStep.j}] ({currentStep.comparing?.[0]}) with pivot ({currentStep.comparing?.[1]}).
+                      Comparing arr[{currentStep.j}] ({currentStep.comparing?.[0]}) with pivot (
+                      {currentStep.comparing?.[1]}).
                     </span>
                   )}
                   {currentStep.action === 'swap' && (
@@ -632,7 +657,13 @@ export const MergeSortTree: React.FC = () => {
         <MetricsPanel
           title={selectedAlgo === 'merge_sort' ? 'Merge Sort Telemetry' : 'Quick Sort Telemetry'}
           complexity={selectedAlgo === 'merge_sort' ? 'O(n log n)' : 'O(n log n) avg / O(n²) worst'}
-          status={currentStepIndex >= steps.length - 1 && steps.length > 0 ? 'found' : isPlaying ? 'searching' : 'idle'}
+          status={
+            currentStepIndex >= steps.length - 1 && steps.length > 0
+              ? 'found'
+              : isPlaying
+                ? 'searching'
+                : 'idle'
+          }
           statusMessage={
             currentStepIndex >= steps.length - 1 && steps.length > 0
               ? 'Sorting Completed'
@@ -645,11 +676,6 @@ export const MergeSortTree: React.FC = () => {
             ...(selectedAlgo === 'quick_sort' ? { 'Total Swaps': currentStep?.swaps ?? 0 } : {}),
             'Recursion Depth': currentStep?.depth ?? 0,
             'Execution Step': `${currentStepIndex + 1} / ${steps.length || 0}`,
-          }}
-          complexityDetails={{
-            bestCase: selectedAlgo === 'merge_sort' ? 'O(n log n)' : 'O(n log n)',
-            averageCase: 'O(n log n)',
-            worstCase: selectedAlgo === 'merge_sort' ? 'O(n log n)' : 'O(n²)',
           }}
           accentColor={selectedAlgo === 'merge_sort' ? 'amber' : 'sky'}
         />

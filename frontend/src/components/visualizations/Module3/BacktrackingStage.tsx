@@ -88,7 +88,8 @@ export const BacktrackingStage: React.FC = () => {
               <span>Backtracking Arena: N-Queens Problem</span>
             </h2>
             <p className="text-xs text-slate-400 mt-1">
-              Observe depth-first tree search, constraint propagation, pruning, and backtracking on an 8×8 chessboard.
+              Observe depth-first tree search, constraint propagation, pruning, and backtracking on
+              an 8×8 chessboard.
             </p>
           </div>
 
@@ -146,7 +147,9 @@ export const BacktrackingStage: React.FC = () => {
               type="button"
               onClick={() => setActiveTab('both')}
               className={`px-3 py-1 rounded-lg transition-colors ${
-                activeTab === 'both' ? 'bg-purple-600 text-white font-bold' : 'text-slate-400 hover:text-white'
+                activeTab === 'both'
+                  ? 'bg-purple-600 text-white font-bold'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               Split View
@@ -155,7 +158,9 @@ export const BacktrackingStage: React.FC = () => {
               type="button"
               onClick={() => setActiveTab('board')}
               className={`px-3 py-1 rounded-lg transition-colors ${
-                activeTab === 'board' ? 'bg-purple-600 text-white font-bold' : 'text-slate-400 hover:text-white'
+                activeTab === 'board'
+                  ? 'bg-purple-600 text-white font-bold'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               Board Only
@@ -164,7 +169,9 @@ export const BacktrackingStage: React.FC = () => {
               type="button"
               onClick={() => setActiveTab('tree')}
               className={`px-3 py-1 rounded-lg transition-colors ${
-                activeTab === 'tree' ? 'bg-purple-600 text-white font-bold' : 'text-slate-400 hover:text-white'
+                activeTab === 'tree'
+                  ? 'bg-purple-600 text-white font-bold'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               Decision Tree Only
@@ -195,10 +202,14 @@ export const BacktrackingStage: React.FC = () => {
       )}
 
       {/* Main Dual Stage */}
-      <div className={`grid gap-8 ${activeTab === 'both' ? 'grid-cols-1 lg:grid-cols-12' : 'grid-cols-1'}`}>
+      <div
+        className={`grid gap-8 ${activeTab === 'both' ? 'grid-cols-1 lg:grid-cols-12' : 'grid-cols-1'}`}
+      >
         {/* Stage A: Chessboard */}
         {(activeTab === 'both' || activeTab === 'board') && (
-          <div className={`${activeTab === 'both' ? 'lg:col-span-6' : ''} p-6 rounded-2xl bg-slate-900/50 border border-slate-800 flex flex-col items-center justify-center`}>
+          <div
+            className={`${activeTab === 'both' ? 'lg:col-span-6' : ''} p-6 rounded-2xl bg-slate-900/50 border border-slate-800 flex flex-col items-center justify-center`}
+          >
             <div className="w-full flex items-center justify-between border-b border-slate-800 pb-3 mb-6">
               <h3 className="text-sm font-bold text-white flex items-center space-x-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
@@ -214,7 +225,9 @@ export const BacktrackingStage: React.FC = () => {
 
         {/* Stage B: D3 Decision Tree */}
         {(activeTab === 'both' || activeTab === 'tree') && (
-          <div className={`${activeTab === 'both' ? 'lg:col-span-6' : ''} p-6 rounded-2xl bg-slate-900/50 border border-slate-800 flex flex-col`}>
+          <div
+            className={`${activeTab === 'both' ? 'lg:col-span-6' : ''} p-6 rounded-2xl bg-slate-900/50 border border-slate-800 flex flex-col`}
+          >
             <div className="w-full flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
               <h3 className="text-sm font-bold text-white flex items-center space-x-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
@@ -247,20 +260,11 @@ export const BacktrackingStage: React.FC = () => {
           'Backtracks Executed': currentStep?.metrics.backtracks ?? 0,
           'Current Depth': `${currentStep?.depth ?? 0} / ${n}`,
         }}
-        complexityDetails={{
-          bestCase: 'O(N) (first path valid)',
-          averageCase: 'Exponential / Factored',
-          worstCase: 'O(N!) branch search',
-        }}
-        accentColor="purple"
+        accentColor="violet"
       />
 
       {/* Shared CodeDisplay */}
-      <CodeDisplay
-        title="Backtracking Algorithm Source"
-        code={N_QUEENS_CODE}
-        language="python"
-      />
+      <CodeDisplay title="Backtracking Algorithm Source" code={N_QUEENS_CODE} language="python" />
     </div>
   );
 };

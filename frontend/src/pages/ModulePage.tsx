@@ -5,6 +5,9 @@ import { modulesApi, algorithmsApi } from '../api/client';
 import { useModuleStore } from '../store/moduleStore';
 import type { Algorithm, Module } from '../types';
 import { ComparisonArena } from '../components/visualizations/Module1/ComparisonArena';
+import { MergeSortTree } from '../components/visualizations/Module2';
+import { BacktrackingStage } from '../components/visualizations/Module3';
+import { FloydWarshallStage } from '../components/visualizations/Module4';
 
 export const ModulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -185,9 +188,15 @@ export const ModulePage: React.FC = () => {
         </div>
       )}
 
-      {/* Primary Workspace: Module 1 Comparison Arena vs Placeholder for other modules */}
+      {/* Primary Workspace: Modules 1-4 Visualizers vs Placeholder for Modules 5-10 */}
       {moduleData.id === 1 ? (
         <ComparisonArena />
+      ) : moduleData.id === 2 ? (
+        <MergeSortTree />
+      ) : moduleData.id === 3 ? (
+        <BacktrackingStage />
+      ) : moduleData.id === 4 ? (
+        <FloydWarshallStage />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Visualization Area Placeholder */}
