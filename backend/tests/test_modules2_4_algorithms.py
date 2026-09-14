@@ -212,16 +212,16 @@ if __name__ == "__main__":
     test_merge_sort_logic()
     test_quick_sort_logic()
     test_module2_api()
-    print("✓ Module 2 tests passed.")
+    print("[PASS] Module 2 tests passed.")
 
     print("Running Module 3 tests...")
     test_n_queens_logic()
     test_module3_api()
-    print("✓ Module 3 tests passed.")
+    print("[PASS] Module 3 tests passed.")
 
     print("Running Module 4 tests...")
     test_floyd_warshall_logic()
     test_module4_api()
-    print("✓ Module 4 tests passed.")
+    print("[PASS] Module 4 tests passed.")
 
     print("\nALL MODULES 2-4 TESTS PASSED SUCCESSFULLY!")

@@ -11,6 +11,12 @@ import type {
   UserProgressCreate,
   Module1RunRequest,
   Module1Trace,
+  Module2RunRequest,
+  Module2RunResponse,
+  Module3RunRequest,
+  Module3RunResponse,
+  Module4RunRequest,
+  Module4RunResponse,
 } from '../types';
 
 export const API_BASE_URL =
@@ -146,6 +152,24 @@ export const algorithmsApi = {
 
   runModule1: (data: Module1RunRequest): Promise<Module1Trace> =>
     apiClient<Module1Trace>('/algorithms/module1/run', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  runModule2: (data: Module2RunRequest): Promise<Module2RunResponse> =>
+    apiClient<Module2RunResponse>('/algorithms/module2/run', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  runModule3: (data: Module3RunRequest): Promise<Module3RunResponse> =>
+    apiClient<Module3RunResponse>('/algorithms/module3/run', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  runModule4: (data: Module4RunRequest): Promise<Module4RunResponse> =>
+    apiClient<Module4RunResponse>('/algorithms/module4/run', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
