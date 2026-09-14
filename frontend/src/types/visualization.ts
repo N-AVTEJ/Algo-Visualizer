@@ -369,3 +369,194 @@ export interface Module7RunResponse {
     total_steps: number;
   };
 }
+
+// ============================================================================
+// Module 8 Types (Branch & Bound: 0/1 Knapsack)
+// ============================================================================
+export type BranchBoundAction =
+  | 'node_created'
+  | 'node_expanded'
+  | 'bound_calculated'
+  | 'branch_explored'
+  | 'solution_candidate'
+  | 'best_solution_updated'
+  | 'branch_pruned';
+
+export interface BranchBoundNode {
+  id: string;
+  parent_id: string | null;
+  depth: number;
+  item_level: number;
+  decision: string;
+  current_weight: number;
+  current_value: number;
+  bound: number;
+  feasible: boolean;
+  pruned: boolean;
+  prune_reason: string | null;
+  status: 'pending' | 'expanded' | 'pruned';
+  selected_items: string[];
+  is_best?: boolean;
+}
+
+export interface BranchBoundStep {
+  step_index: number;
+  action: BranchBoundAction;
+  node_id: string;
+  parent_id: string | null;
+  depth: number;
+  item_level: number;
+  decision: string;
+  current_weight: number;
+  current_value: number;
+  bound: number;
+  feasible: boolean;
+  can_improve: boolean;
+  best_value: number;
+  best_selected_items: string[];
+  pruned: boolean;
+  prune_reason: string | null;
+  description: string;
+}
+
+export interface KnapsackBBItem {
+  id: string;
+  weight: number;
+  value: number;
+  ratio?: number;
+}
+
+export interface Module8RunRequest {
+  items?: KnapsackBBItem[];
+  capacity?: number;
+}
+
+export interface Module8RunResponse {
+  steps: BranchBoundStep[];
+  optimal_value: number;
+  selected_items: string[];
+  final_weight: number;
+  tree_nodes: BranchBoundNode[];
+  items: KnapsackBBItem[];
+  capacity: number;
+  metrics: {
+    nodes_created: number;
+    nodes_expanded: number;
+    nodes_pruned: number;
+    final_best_value: number;
+    final_weight: number;
+    selected_item_count: number;
+    maximum_search_depth: number;
+  };
+}
+
+// ============================================================================
+// Module 9 Types (Boolean Satisfiability - SAT Solver)
+// ============================================================================
+export interface SatLiteralDetail {
+  literal: string;
+  variable: string;
+  var_value: boolean;
+  lit_value: boolean;
+}
+
+export interface SatClauseEvaluation {
+  clause_index: number;
+  clause_str: string;
+  literals: SatLiteralDetail[];
+  satisfied: boolean;
+  satisfying_literals: string[];
+}
+
+export interface SatStep {
+  step_index: number;
+  assignment_number: number;
+  total_assignments: number;
+  variable_values: Record<string, boolean>;
+  clause_evaluations: SatClauseEvaluation[];
+  all_satisfied: boolean;
+  is_satisfying_found: boolean;
+  satisfying_assignment: Record<string, boolean> | null;
+  description: string;
+}
+
+export interface Module9RunRequest {
+  variables?: string[];
+  clauses?: string[][];
+  stop_on_first_satisfying?: boolean;
+}
+
+export interface Module9RunResponse {
+  steps: SatStep[];
+  is_satisfiable: boolean;
+  satisfying_assignment: Record<string, boolean> | null;
+  total_assignments: number;
+  assignments_checked: number;
+  early_termination: boolean;
+  variables: string[];
+  clauses: string[][];
+  metrics: {
+    variables_count: number;
+    clauses_count: number;
+    total_possible_assignments: number;
+    assignments_checked: number;
+    is_satisfiable: boolean;
+    early_termination: boolean;
+  };
+}
+
+// ============================================================================
+// Module 10 Types (Graph Coloring Backtracking)
+// ============================================================================
+export type GraphColoringAction =
+  | 'color_attempt'
+  | 'conflict'
+  | 'assigned'
+  | 'backtrack'
+  | 'solution_found';
+
+export interface GraphColoringStep {
+  step_index: number;
+  action: GraphColoringAction;
+  vertex: string;
+  color: number;
+  k_colors_allowed: number;
+  search_depth: number;
+  partial_coloring: Record<string, number>;
+  conflict: boolean;
+  conflicting_vertex: string | null;
+  conflict_reason: string | null;
+  current_best_coloring: Record<string, number> | null;
+  description: string;
+}
+
+export interface SimpleGraphEdge {
+  u: string;
+  v: string;
+}
+
+export interface Module10RunRequest {
+  vertices?: string[];
+  edges?: SimpleGraphEdge[];
+  max_colors?: number;
+}
+
+export interface Module10RunResponse {
+  steps: GraphColoringStep[];
+  final_coloring: Record<string, number>;
+  chromatic_number: number;
+  is_colorable: boolean;
+  vertices: string[];
+  edges: SimpleGraphEdge[];
+  metrics: {
+    vertices_count: number;
+    edges_count: number;
+    colors_attempted: number;
+    conflicts_detected: number;
+    backtracks_performed: number;
+    chromatic_number: number;
+    max_search_depth: number;
+    is_colorable: boolean;
+  };
+}
+

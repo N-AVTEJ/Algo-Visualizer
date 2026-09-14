@@ -23,6 +23,12 @@ import type {
   Module6RunResponse,
   Module7RunRequest,
   Module7RunResponse,
+  Module8RunRequest,
+  Module8RunResponse,
+  Module9RunRequest,
+  Module9RunResponse,
+  Module10RunRequest,
+  Module10RunResponse,
 } from '../types';
 
 export const API_BASE_URL =
@@ -194,6 +200,24 @@ export const algorithmsApi = {
 
   runModule7: (data: Module7RunRequest): Promise<Module7RunResponse> =>
     apiClient<Module7RunResponse>('/algorithms/module7/run', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  runModule8: (data: Module8RunRequest): Promise<Module8RunResponse> =>
+    apiClient<Module8RunResponse>('/algorithms/module8/run', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  runModule9: (data: Module9RunRequest): Promise<Module9RunResponse> =>
+    apiClient<Module9RunResponse>('/algorithms/module9/run', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  runModule10: (data: Module10RunRequest): Promise<Module10RunResponse> =>
+    apiClient<Module10RunResponse>('/algorithms/module10/run', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
