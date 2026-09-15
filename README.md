@@ -5,19 +5,20 @@
 
 [![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript_5-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Python](https://img.shields.io/badge/Python_3.13-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Google Gemini](https://img.shields.io/badge/Google_Gemini_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Vite](https://img.shields.io/badge/Vite_5-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_3-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Google Gemini AI](https://img.shields.io/badge/Google_Gemini_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![Pytest](https://img.shields.io/badge/Pytest_49_Passed-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)](https://docs.pytest.org/)
 [![Vitest](https://img.shields.io/badge/Vitest_11_Passed-FCC72B?style=for-the-badge&logo=vitest&logoColor=black)](https://vitest.dev/)
+[![Access](https://img.shields.io/badge/Access-Open%20Guest%20Mode-10B981?style=for-the-badge)](https://github.com/)
 
 <p align="center">
-  <b>AlgoLens Pro</b> is a modern, high-performance Design and Analysis of Algorithms (DAA) educational platform. It bridges abstract algorithmic theory and intuitive visual mastery through frame-accurate step-by-step animations, real-time performance telemetry, interactive practice quizzes, and an integrated Google Gemini RAG AI tutor.
+  <b>AlgoLens Pro</b> is a modern, high-performance Design and Analysis of Algorithms (DAA) educational suite. It transforms abstract algorithmic concepts into intuitive visual experiences with frame-accurate step-by-step animations, live telemetry HUDs, an integrated Google Gemini RAG AI tutor, practice quizzes, and 1-click test autofill.
 </p>
 
-[Quick Start](#-quick-start-running-the-project) • [Configuring Gemini AI](#-configuring-gemini-ai-assistant) • [Autofill Feature](#-one-click-autofill) • [Curriculum Modules](#-curriculum-modules-10-phases) • [Testing](#-running-automated-tests)
+[Quick Start](#-quick-start-running-the-project) • [Key Features](#-key-features) • [Curriculum Modules](#-curriculum-modules-10-phases) • [Gemini AI Configuration](#-gemini-ai-assistant-configuration) • [Automated Tests](#-automated-test-suites)
 
 </div>
 
@@ -25,100 +26,72 @@
 
 ## 🚀 Quick Start (Running the Project)
 
-Run the frontend and backend in **two separate terminal windows**.
+Open **two separate terminal windows** in your root workspace and run:
 
-### 1. Terminal 1: Start Frontend (Port 5173)
-
-From your project root:
-
+### Terminal 1: Frontend Web Application
 ```powershell
 cd Algo-Visualizer\frontend
 npm run dev
 ```
 
-> **Note (First-time setup only):** Run `npm install` inside `Algo-Visualizer\frontend` before `npm run dev`.
-
-The frontend web app will be live at:
-**[http://localhost:5173](http://localhost:5173)**
+> 🌐 **Frontend URL**: [http://localhost:5173](http://localhost:5173)
 
 ---
 
-### 2. Terminal 2: Start Backend (Port 8000)
-
-From your project root:
-
+### Terminal 2: Backend FastAPI Server
 ```powershell
 cd Algo-Visualizer
 cd backend
 .\venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-> **Note (First-time setup only):**
-> If you have not yet created the virtual environment or seeded the database:
-> ```powershell
-> cd Algo-Visualizer\backend
-> python -m venv venv
-> .\venv\Scripts\Activate.ps1
-> pip install -r requirements.txt
-> python -m app.db.seed
-> ```
-
-Backend APIs and documentation:
-- **API Health Check**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
-- **Interactive Swagger Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **ReDoc Documentation**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+> ⚙️ **Backend Root**: [http://127.0.0.1:8000](http://127.0.0.1:8000)  
+> 📋 **Interactive Swagger Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)  
+> 🩺 **Health Check API**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
 
 ---
 
-## 🤖 Configuring Gemini AI Assistant
+## 🛠️ First-Time Installation & Setup
 
-### How to resolve:
-> `Error: The AI assistant is not configured on this server. Please ask the administrator to set the GEMINI_API_KEY.`
+If you are cloning this repository for the first time, initialize both environments with these commands:
 
-This error occurs when the `GEMINI_API_KEY` variable in `backend/.env` is empty. Follow these 3 simple steps:
+### 1. Initialize Frontend
+```powershell
+cd Algo-Visualizer\frontend
+npm install
+```
 
-1. **Get a free Google Gemini API Key**:
-   - Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
-   - Click **Create API key** and copy it.
+### 2. Initialize Backend & Database
+```powershell
+cd Algo-Visualizer\backend
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 
-2. **Paste it into `backend/.env`**:
-   - Open `Algo-Visualizer/backend/.env` in your editor.
-   - Set line 3 with your key:
-     ```env
-     GEMINI_API_KEY=AIzaSyYourActualKeyHere
-     ```
-
-3. **Save the file**:
-   - The FastAPI backend will automatically reload with the new key.
-   - Refresh or ask any question in **AI Assistant** (`/ai-assistant`) and receive instant, source-backed algorithmic guidance!
-
----
-
-## 🎲 One-Click Autofill
-
-No need to manually type numbers, arrays, or matrices into input fields:
-1. Navigate to any module visualizer (e.g., **Module 1: Search & Comparisons**, **Module 2: Merge Sort**, **Module 5: 0/1 Knapsack**).
-2. Click the glowing **🎲 Autofill** button next to the input fields.
-3. Realistic test inputs will be instantly populated and applied.
-4. Click **Run / Execute** to watch the algorithmic execution unfold!
+# Seed the curriculum modules and algorithm registry into the database
+python -m app.db.seed
+```
 
 ---
 
-## 🔓 Open Access (No Login Required)
+## ✨ Key Features
 
-All features are 100% accessible to every user:
-- **Zero Authentication Barriers**: No sign-in or registration needed.
-- **Guest Progress Tracking**: Algorithm completion and quiz records automatically persist in your browser's `localStorage`.
-- **Direct Navigation**: Jump straight to any algorithm visualizer, practice quiz arena, or AI tutor.
+- **🎲 1-Click "Autofill" Test Data**: Never waste time manually typing inputs. Click the **🎲 Autofill** button inside any algorithm visualizer to instantly populate realistic, interesting sample inputs (arrays, targets, capacities, graphs).
+- **🔓 Open Access (No Login Barrier)**: Enjoy 100% unrestricted access to all 10 modules, practice quizzes, and the AI Assistant with no sign-in or account required. Guest progress automatically persists in `localStorage`.
+- **🤖 Gemini RAG AI Assistant**: Chat with an AI tutor powered by Google Gemini SDK and vector similarity search. Ask about algorithm derivations, Big-O complexities, and edge cases with cited references.
+- **📊 Real-Time Telemetry HUD**: Live metrics counters displaying exact comparisons, assignments, matrix lookups, recursion depths, and theoretical Big-O bounds.
+- **🧪 Interactive Practice Quizzes**: 20+ curriculum multiple-choice questions across all 10 modules with instant scoring, feedback, and in-depth explanations.
+- **📺 Integrated YouTube Video Lectures**: Watch embedded expert video lectures alongside interactive visualizers.
+- **💾 Export & Download Code**: 1-click Python source code export and clipboard copying.
 
 ---
 
 ## 📚 Curriculum Modules (10 Phases)
 
-| # | Module Name | Key Algorithms | Interactive Visualization Highlights |
-|:---:|---|---|---|
-| **1** | **Search & Asymptotics** | Linear Search, Binary Search | Coordinated dual arena, live comparisons HUD, logarithmic vs linear curves, Autofill |
-| **2** | **Divide & Conquer** | Merge Sort, Quick Sort | Interactive recursion tree, pivot partitioning, array bar state transitions, Autofill |
+| # | Module | Key Algorithms | Features & Visualizations |
+|:---:|:---|:---|:---|
+| **1** | **Search & Asymptotics** | Linear Search, Binary Search | Coordinated dual comparison arena, step counters, logarithmic vs linear curves, Autofill |
+| **2** | **Divide & Conquer** | Merge Sort, Quick Sort | Recursive Partition Tree visualizer, array bar state transitions, Autofill |
 | **3** | **Backtracking I** | $N$-Queens Problem | Interactive $N \times N$ chessboard, conflict ray tracing, backtracking branch rollback |
 | **4** | **Dynamic Programming I** | Floyd-Warshall APSP | 2D intermediate distance matrix, intermediate vertex iteration step $k$ |
 | **5** | **Dynamic Programming II** | 0/1 Knapsack Problem | 2D table $dp[i][w]$ generation, backtracking optimal subset recovery, Autofill |
@@ -130,68 +103,91 @@ All features are 100% accessible to every user:
 
 ---
 
-## 🧪 Running Automated Tests
+## 🤖 Gemini AI Assistant Configuration
 
-AlgoLens Pro features comprehensive automated test suites for both backend and frontend.
+The platform uses Google's Gemini SDK for its AI Assistant. Your API key is stored locally in `backend/.env`:
+
+```env
+DATABASE_URL=postgresql://postgres:Navtej%402006@localhost:5432/algolens
+SECRET_KEY=136a6924fd0e02b54c3b7586a6877d8b39c773c7f5c095fe5828e6c72ff4a6d2
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+### Supported Gemini Models:
+- **Chat**: `gemini-3.5-flash-lite`, `gemini-3.6-flash`, `gemini-flash-latest` (with automatic resilient fallback)
+- **Embeddings**: `gemini-embedding-001` (3072 dimensions)
+
+To get a free key, visit [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+---
+
+## 🧪 Automated Test Suites
+
+The repository maintains automated test coverage across both frontend and backend layers:
 
 ### Backend Tests (49 Pytest Tests)
 ```powershell
 cd Algo-Visualizer\backend
 .\venv\Scripts\python.exe -m pytest -v
 ```
-- ✅ 49/49 passing unit and integration tests.
-- Verifies algorithmic trace generation, progress persistence, and AI RAG pipelines.
+> Result: **`49 passed`** with 100% passing rate. Verifies all 10 algorithm trace generation endpoints, progress endpoints, and AI RAG pipelines.
 
-### Frontend Tests (11 Vitest Tests)
-```bash
+### Frontend Component Tests (11 Vitest Tests)
+```powershell
 cd Algo-Visualizer\frontend
 npm test
 ```
-- ✅ 11/11 passing React component tests.
-- Verifies `AnimationPlayer`, `MetricsPanel`, `KnapsackStage`, and `CodeDisplay`.
+> Result: **`11 passed`** across 4 test suites. Verifies `AnimationPlayer`, `MetricsPanel`, `KnapsackStage`, and `CodeDisplay`.
 
-### Frontend Build Validation
-```bash
+### Frontend Production Build Validation
+```powershell
 cd Algo-Visualizer\frontend
 npm run build
 ```
-- ✅ TypeScript strict typecheck & Vite production bundle compilation.
+> Result: **`✓ built in ~10s`** with zero TypeScript or bundler errors.
 
 ---
 
-## 📂 Project Structure
+## 📁 Repository Structure
 
 ```text
 Algo-Visualizer/
 ├── frontend/                     # React 18 + TypeScript + Vite + Tailwind CSS
 │   ├── src/
-│   │   ├── api/                  # Backend API client & Axios/Fetch wrappers
+│   │   ├── api/                  # Backend API client interfaces
 │   │   ├── components/           # Module visualizers, AnimationPlayer, CodeDisplay
-│   │   ├── data/                 # Quizzes & algorithm curriculum metadata
+│   │   ├── data/                 # Quizzes & presets
 │   │   ├── pages/                # HomePage, ModulePage, AIAssistantPage, PracticePage
-│   │   └── store/                # Zustand state stores (modules & progress)
+│   │   └── store/                # Zustand stores (modules & guest progress)
 │   └── package.json
 │
 ├── backend/                      # Python 3.13 FastAPI backend
 │   ├── app/
-│   │   ├── ai/                   # Gemini SDK integration & RAG knowledge retrieval
-│   │   ├── api/routes/           # Endpoints: /algorithms, /modules, /ai, /progress
+│   │   ├── ai/                   # Gemini SDK integration & RAG pipeline
+│   │   ├── api/routes/           # REST endpoints: /algorithms, /modules, /ai, /progress
 │   │   ├── core/                 # Settings, dependencies, security
 │   │   ├── db/                   # Database session, models, seed script
-│   │   └── schemas/              # Pydantic request/response schemas
+│   │   └── schemas/              # Pydantic schemas
 │   ├── tests/                    # 49 unit and API integration tests
 │   └── .env                      # Environment variables (GEMINI_API_KEY)
 │
-├── brain/                        # System architecture & PRD documentation
-└── README.md                     # This document
+├── brain/                        # System architecture & PRD specifications
+└── README.md                     # This documentation file
 ```
 
 ---
 
-## 📝 Key Keyboard & Playback Controls
+## 🎮 Playback & Keyboard Shortcuts
 
-- **Spacebar / Play Button**: Play / Pause step execution.
-- **Left / Right Arrow**: Step backward / forward one frame.
-- **Speed Slider**: Real-time animation speed control (100ms - 2000ms).
-- **Reset Button**: Rewind algorithm to initial step.
-- **Copy / Download Code**: 1-click Python implementation export.
+- **Spacebar / Play Button**: Toggle Play / Pause on animation timeline.
+- **Left / Right Arrow Buttons**: Step backward / forward frame-by-frame.
+- **Speed Slider**: Real-time animation speed control (100ms – 2000ms).
+- **Reset Button**: Rewind algorithm back to initial step 0.
+- **🎲 Autofill**: Instantly generate and apply valid test data with one click.
+- **Export Code**: 1-click Python source code copy or download.
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ for Computer Science & DAA Learners worldwide.</sub>
+</div>
