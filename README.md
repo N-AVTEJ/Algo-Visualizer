@@ -26,7 +26,7 @@
 
 ## 🚀 Quick Start (Running the Project)
 
-Open **two separate terminal windows** in your root workspace and run:
+Open **two separate terminal windows** and run:
 
 ### Terminal 1: Frontend Web Application
 ```powershell
@@ -53,7 +53,7 @@ cd backend
 
 ## 🛠️ First-Time Installation & Setup
 
-If you are cloning this repository for the first time, initialize both environments with these commands:
+If you are setting up this repository for the first time:
 
 ### 1. Initialize Frontend
 ```powershell
@@ -105,7 +105,7 @@ python -m app.db.seed
 
 ## 🤖 Gemini AI Assistant Configuration
 
-The platform uses Google's Gemini SDK for its AI Assistant. Your API key is stored locally in `backend/.env`:
+The platform uses Google's Gemini SDK for its AI Assistant. Your API key is stored in `backend/.env`:
 
 ```env
 DATABASE_URL=postgresql://postgres:Navtej%402006@localhost:5432/algolens
