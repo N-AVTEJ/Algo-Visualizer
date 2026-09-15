@@ -229,8 +229,8 @@ export const ComparisonArena: React.FC = () => {
           Configuration & Test Inputs
         </h3>
 
-        {/* Presets Pills */}
-        <div className="flex flex-wrap gap-2">
+        {/* Presets Pills & Autofill */}
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-slate-400 self-center mr-1">Presets:</span>
           {PRESETS.map((preset) => (
             <button
@@ -248,6 +248,27 @@ export const ComparisonArena: React.FC = () => {
               {preset.name}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => {
+              const sampleArrays = [
+                { arr: [12, 24, 35, 48, 56, 67, 78, 89, 95], target: 56 },
+                { arr: [5, 15, 23, 38, 42, 59, 71, 84, 99], target: 42 },
+                { arr: [10, 20, 30, 40, 50, 60, 70, 80], target: 20 },
+                { arr: [3, 9, 17, 25, 33, 49, 62, 77, 88, 94], target: 77 },
+                { arr: [8, 14, 29, 36, 45, 58, 63, 81], target: 100 },
+              ];
+              const picked = sampleArrays[Math.floor(Math.random() * sampleArrays.length)];
+              const strArr = picked.arr.join(', ');
+              const strTarget = String(picked.target);
+              setArrayInput(strArr);
+              setTargetInput(strTarget);
+              handleApplyInputs(strArr, strTarget);
+            }}
+            className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 text-xs font-bold shadow-md shadow-amber-500/20 transition-all ml-auto flex items-center space-x-1"
+          >
+            <span>🎲 Autofill</span>
+          </button>
         </div>
 
         {/* Input Fields */}
@@ -295,6 +316,28 @@ export const ComparisonArena: React.FC = () => {
             className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
           >
             Apply Inputs
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const sampleArrays = [
+                { arr: [12, 24, 35, 48, 56, 67, 78, 89, 95], target: 56 },
+                { arr: [5, 15, 23, 38, 42, 59, 71, 84, 99], target: 42 },
+                { arr: [10, 20, 30, 40, 50, 60, 70, 80], target: 20 },
+                { arr: [3, 9, 17, 25, 33, 49, 62, 77, 88, 94], target: 77 },
+                { arr: [8, 14, 29, 36, 45, 58, 63, 81], target: 100 },
+              ];
+              const picked = sampleArrays[Math.floor(Math.random() * sampleArrays.length)];
+              const strArr = picked.arr.join(', ');
+              const strTarget = String(picked.target);
+              setArrayInput(strArr);
+              setTargetInput(strTarget);
+              handleApplyInputs(strArr, strTarget);
+            }}
+            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow-md shadow-amber-500/20 transition-all inline-flex items-center space-x-1.5 cursor-pointer"
+          >
+            <span>🎲 Autofill</span>
           </button>
 
           <button

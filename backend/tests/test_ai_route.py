@@ -132,10 +132,10 @@ class TestRetrieveContext:
 # ---------------------------------------------------------------------------
 
 
-def test_ask_requires_authentication():
-    """POST /api/ai/ask without a token must return 401."""
+def test_ask_allows_guest_access():
+    """POST /api/ai/ask without a token is permitted for guest users (no 401)."""
     response = client.post("/api/ai/ask", json={"question": "What is Merge Sort?"})
-    assert response.status_code == 401
+    assert response.status_code != 401
 
 
 def test_ask_validates_question_too_short():
@@ -153,11 +153,12 @@ def test_ask_validates_question_too_short():
 
 
 def test_ask_returns_503_when_no_api_key():
-    """POST /api/ai/ask must return 503 when OPENAI_API_KEY is absent."""
+    """POST /api/ai/ask must return 503 when GEMINI_API_KEY and OPENAI_API_KEY are absent."""
     with (
         patch("app.api.routes.ai.settings") as mock_settings,
         patch("app.core.deps.get_current_user", return_value=MagicMock(id=1)),
     ):
+        mock_settings.GEMINI_API_KEY = None
         mock_settings.OPENAI_API_KEY = None
         response = client.post(
             "/api/ai/ask",
@@ -171,30 +172,40 @@ def test_ask_returns_503_when_no_api_key():
 
 def test_ask_happy_path_mocked():
     """POST /api/ai/ask with all external calls mocked returns valid AskResponse."""
-    with (
-        patch("app.core.deps.get_current_user", return_value=MagicMock(id=1)),
-        patch("app.api.routes.ai.settings") as mock_settings,
-        patch("app.api.routes.ai.get_embedding", return_value=[0.1] * 1536),
-        patch("app.api.routes.ai.retrieve_context", return_value=[
-            {"topic": "merge_sort", "content": "Merge Sort is O(n log n)."},
-        ]),
-        patch("app.api.routes.ai.build_prompt", return_value=[
-            {"role": "system", "content": "You are an assistant."},
-            {"role": "user", "content": "What is Merge Sort?"},
-        ]),
-        patch("app.api.routes.ai.chat_completion", return_value="Merge Sort runs in O(n log n)."),
-    ):
-        mock_settings.OPENAI_API_KEY = "sk-fake-key"
-        response = client.post(
-            "/api/ai/ask",
-            json={"question": "What is Merge Sort?"},
-            headers=_make_auth_headers(),
-        )
+    from app.main import app
+    from app.core.deps import get_current_user
+
+    fake_user = MagicMock()
+    fake_user.id = 1
+
+    app.dependency_overrides[get_current_user] = lambda: fake_user
+    try:
+        with (
+            patch("app.api.routes.ai.settings") as mock_settings,
+            patch("app.api.routes.ai.get_embedding", return_value=[0.1] * 768),
+            patch("app.api.routes.ai.retrieve_context", return_value=[
+                {"topic": "merge_sort", "content": "Merge Sort is O(n log n)."},
+            ]),
+            patch("app.api.routes.ai.build_prompt", return_value=[
+                {"role": "system", "content": "You are an assistant."},
+                {"role": "user", "content": "What is Merge Sort?"},
+            ]),
+            patch("app.api.routes.ai.chat_completion", return_value="Merge Sort runs in O(n log n)."),
+        ):
+            mock_settings.GEMINI_API_KEY = "AIzaFakeKey"
+            mock_settings.OPENAI_API_KEY = None
+            response = client.post(
+                "/api/ai/ask",
+                json={"question": "What is Merge Sort?"},
+            )
+    finally:
+        app.dependency_overrides.pop(get_current_user, None)
 
     assert response.status_code == 200
     data = response.json()
     assert data["answer"] == "Merge Sort runs in O(n log n)."
     assert "merge_sort" in data["sources"]
+
 
 
 # ---------------------------------------------------------------------------

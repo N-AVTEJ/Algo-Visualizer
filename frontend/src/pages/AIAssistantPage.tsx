@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Bot, Send, Sparkles, User as UserIcon, AlertCircle, Tag } from 'lucide-react';
-import { useAuthStore } from '../store/authStore';
 import { aiApi, ApiError } from '../api/client';
 import type { AskResponse } from '../types';
 
@@ -134,20 +132,11 @@ function nextId(): number {
 }
 
 export const AIAssistantPage: React.FC = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated, token } = useAuthStore();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  // Redirect to login if not authenticated.
-  useEffect(() => {
-    if (!isAuthenticated && !token) {
-      navigate('/login', { replace: true });
-    }
-  }, [isAuthenticated, token, navigate]);
 
   // Auto-scroll to bottom on new messages.
   useEffect(() => {
@@ -180,11 +169,14 @@ export const AIAssistantPage: React.FC = () => {
       if (err instanceof ApiError) {
         if (err.status === 503) {
           errorText =
-            'The AI assistant is not configured on this server. ' +
-            'Please ask the administrator to set the OPENAI_API_KEY.';
-        } else if (err.status === 401) {
-          errorText = 'Your session has expired. Please log in again.';
-          navigate('/login');
+            '⚙️ Google Gemini API Key Required:\n\n' +
+            'The AI Assistant needs your Gemini API key to generate algorithmic explanations.\n\n' +
+            'How to configure:\n' +
+            '1. Open the file `backend/.env` in your editor.\n' +
+            '2. Add your key to line 3:\n' +
+            '   GEMINI_API_KEY=AIzaSy...\n' +
+            '3. (Get a free key from https://aistudio.google.com/app/apikey if needed)\n' +
+            '4. Save the file — the FastAPI server will auto-reload and the AI will be ready instantly!';
         } else {
           errorText = err.message;
         }

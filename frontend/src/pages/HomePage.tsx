@@ -9,24 +9,48 @@ import {
   GitCompare,
   RefreshCw,
   AlertTriangle,
+  Award,
+  CheckCircle2,
+  Clock,
 } from 'lucide-react';
-import { modulesApi } from '../api/client';
+import { modulesApi, algorithmsApi } from '../api/client';
 import { useModuleStore } from '../store/moduleStore';
-import type { Module } from '../types';
+import { useProgressStore } from '../store/progressStore';
+import type { Module, Algorithm } from '../types';
 
 export const HomePage: React.FC = () => {
   const { modules, setModules } = useModuleStore();
+  const { progressMap, fetchProgress, getCompletedCount } = useProgressStore();
+
   const [loading, setLoading] = useState(modules.length === 0);
   const [error, setError] = useState<string | null>(null);
+  const [moduleAlgoMap, setModuleAlgoMap] = useState<Record<number, Algorithm[]>>({});
+
+  useEffect(() => {
+    fetchProgress();
+  }, [fetchProgress]);
 
   useEffect(() => {
     let isMounted = true;
     modulesApi
       .list()
-      .then((data) => {
+      .then(async (data) => {
+        if (!isMounted) return;
+        setModules(data);
+        setLoading(false);
+
+        // Fetch algorithms per module to compute per-module completion
+        const algoMap: Record<number, Algorithm[]> = {};
+        for (const m of data) {
+          try {
+            const algos = await algorithmsApi.list(m.id);
+            algoMap[m.id] = algos;
+          } catch {
+            algoMap[m.id] = [];
+          }
+        }
         if (isMounted) {
-          setModules(data);
-          setLoading(false);
+          setModuleAlgoMap(algoMap);
         }
       })
       .catch((err: Error) => {
@@ -40,6 +64,10 @@ export const HomePage: React.FC = () => {
       isMounted = false;
     };
   }, [setModules]);
+
+  const totalAlgorithms = Object.values(moduleAlgoMap).reduce((sum, algos) => sum + algos.length, 0) || 15;
+  const completedCount = getCompletedCount();
+  const progressPercent = Math.min(100, Math.round((completedCount / totalAlgorithms) * 100));
 
   return (
     <div className="space-y-12">
@@ -78,11 +106,55 @@ export const HomePage: React.FC = () => {
             <GitCompare className="w-4 h-4" />
             <span>Algorithm Compare</span>
           </Link>
+
+          <Link
+            to="/practice"
+            className="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold transition-all inline-flex items-center space-x-2"
+          >
+            <Award className="w-4 h-4 text-violet-400" />
+            <span>Practice Arena</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* Learning Progress Overview Card */}
+      <section className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900/90 to-violet-950/30 border border-slate-800 shadow-xl">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2 text-xs font-semibold text-violet-400 uppercase tracking-wider">
+              <Award className="w-4 h-4" />
+              <span>Curriculum Mastery Progress</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white">
+              {completedCount === 0
+                ? 'Begin Your Algorithm Journey'
+                : `${completedCount} of ${totalAlgorithms} Algorithms Mastered`}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 max-w-xl">
+              Execute visualizations through to the final step or complete quizzes in the Practice Arena to track your mastery.
+            </p>
+          </div>
+
+          <div className="w-full md:w-72 space-y-2 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-400 font-medium">Overall Progress</span>
+              <span className="font-mono font-bold text-violet-400">{progressPercent}%</span>
+            </div>
+            <div className="w-full h-3 rounded-full bg-slate-800 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-violet-500 to-indigo-400 transition-all duration-500 rounded-full"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+            <span className="text-[11px] text-slate-500 block text-right font-mono">
+              {completedCount}/{totalAlgorithms} Completed
+            </span>
+          </div>
         </div>
       </section>
 
       {/* Curriculum Modules Grid */}
-      <section id="curriculum-modules" className="pt-8">
+      <section id="curriculum-modules" className="pt-4">
         <div className="flex items-center justify-between mb-8 border-b border-slate-800 pb-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center space-x-2">
@@ -90,7 +162,7 @@ export const HomePage: React.FC = () => {
               <span>DAA Curriculum Modules</span>
             </h2>
             <p className="text-sm text-slate-400 mt-1">
-              Select a foundational algorithm domain to view its algorithms and visualization stage.
+              Select a foundational algorithm domain to view its algorithms, step-trace execution, and telemetry.
             </p>
           </div>
           <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300">
@@ -111,33 +183,52 @@ export const HomePage: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {modules.map((mod: Module) => (
-              <Link
-                key={mod.id}
-                to={`/module/${mod.id}`}
-                className="group p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-violet-500/50 hover:bg-slate-900/80 transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-md bg-violet-950/80 text-violet-300 border border-violet-800/50">
-                      Module {mod.order_index}
-                    </span>
-                    <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-violet-400 group-hover:translate-x-1 transition-all" />
-                  </div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-violet-300 transition-colors mb-2">
-                    {mod.name}
-                  </h3>
-                  <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
-                    {mod.description || 'Comprehensive algorithm study and telemetry.'}
-                  </p>
-                </div>
+            {modules.map((mod: Module) => {
+              const algos = moduleAlgoMap[mod.id] || [];
+              const completedInMod = algos.filter((a) => progressMap[a.id]?.completed).length;
+              const isModCompleted = algos.length > 0 && completedInMod === algos.length;
+              const isInProgress = completedInMod > 0 && !isModCompleted;
 
-                <div className="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500 group-hover:text-slate-400">
-                  <span>Enter Stage</span>
-                  <Play className="w-3.5 h-3.5 text-violet-400" />
-                </div>
-              </Link>
-            ))}
+              return (
+                <Link
+                  key={mod.id}
+                  to={`/module/${mod.id}`}
+                  className="group p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-violet-500/50 hover:bg-slate-900/80 transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-md bg-violet-950/80 text-violet-300 border border-violet-800/50">
+                        Module {mod.order_index}
+                      </span>
+                      {isModCompleted ? (
+                        <span className="inline-flex items-center space-x-1 text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2 py-0.5 rounded-full">
+                          <CheckCircle2 className="w-3 h-3" />
+                          <span>Completed</span>
+                        </span>
+                      ) : isInProgress ? (
+                        <span className="inline-flex items-center space-x-1 text-[11px] font-semibold text-amber-400 bg-amber-950/60 border border-amber-800/60 px-2 py-0.5 rounded-full">
+                          <Clock className="w-3 h-3" />
+                          <span>{completedInMod}/{algos.length} Done</span>
+                        </span>
+                      ) : (
+                        <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-violet-400 group-hover:translate-x-1 transition-all" />
+                      )}
+                    </div>
+                    <h3 className="text-lg font-bold text-white group-hover:text-violet-300 transition-colors mb-2">
+                      {mod.name}
+                    </h3>
+                    <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
+                      {mod.description || 'Comprehensive algorithm study and telemetry.'}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500 group-hover:text-slate-400">
+                    <span>{algos.length > 0 ? `${algos.length} Algorithms` : 'Enter Stage'}</span>
+                    <Play className="w-3.5 h-3.5 text-violet-400" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </section>

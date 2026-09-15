@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Zap, LogIn, LogOut, User as UserIcon, GitCompare, ChevronDown, Bot } from 'lucide-react';
-import { useAuthStore } from '../store/authStore';
+import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Zap, GitCompare, ChevronDown, Bot } from 'lucide-react';
 import { useModuleStore } from '../store/moduleStore';
 import { modulesApi } from '../api/client';
 
 export const Layout: React.FC = () => {
-  const navigate = useNavigate();
-  const { user, token, isAuthenticated, logout } = useAuthStore();
   const { modules, setModules } = useModuleStore();
   const [modulesDropdownOpen, setModulesDropdownOpen] = useState(false);
 
@@ -22,11 +19,6 @@ export const Layout: React.FC = () => {
         });
     }
   }, [modules.length, setModules]);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
@@ -111,73 +103,30 @@ export const Layout: React.FC = () => {
                 <span>Compare</span>
               </NavLink>
 
-              {/* AI Assistant Link — only shown when authenticated */}
-              {(isAuthenticated || token) && (
-                <NavLink
-                  to="/ai-assistant"
-                  className={({ isActive }) =>
-                    `px-3 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-1.5 ${
-                      isActive
-                        ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-                    }`
-                  }
-                >
-                  <Bot className="w-4 h-4" />
-                  <span>AI Assistant</span>
-                </NavLink>
-              )}
+              {/* AI Assistant Link */}
+              <NavLink
+                to="/ai-assistant"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-1.5 ${
+                    isActive
+                      ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  }`
+                }
+              >
+                <Bot className="w-4 h-4 text-violet-400" />
+                <span>AI Assistant</span>
+              </NavLink>
             </nav>
           </div>
 
-          {/* Authentication State */}
+          {/* Open Access Badge (No login required) */}
           <div className="flex items-center space-x-3">
-            {isAuthenticated || token ? (
-              <div className="flex items-center space-x-3">
-                <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/70 border border-slate-700/60 text-sm text-slate-300">
-                  <UserIcon className="w-4 h-4 text-violet-400" />
-                  <span className="max-w-[160px] truncate">{user?.email || 'Logged In'}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="px-3 py-2 rounded-lg text-sm font-medium bg-slate-800 hover:bg-red-950/60 hover:text-red-300 text-slate-300 border border-slate-700 hover:border-red-800/60 transition-colors inline-flex items-center space-x-1.5 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  title="Log out"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span className="hidden sm:inline">Logout</span>
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <NavLink
-                  to="/login"
-                  className={({ isActive }) =>
-                    `px-3.5 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-1.5 ${
-                      isActive
-                        ? 'bg-violet-600 text-white'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-                    }`
-                  }
-                >
-                  <LogIn className="w-4 h-4" />
-                  <span>Log In</span>
-                </NavLink>
-
-                <NavLink
-                  to="/register"
-                  className={({ isActive }) =>
-                    `px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors rounded-lg ${
-                      isActive
-                        ? 'bg-violet-700 text-white'
-                        : 'bg-violet-600 hover:bg-violet-500 text-white shadow-md shadow-violet-600/30'
-                    }`
-                  }
-                >
-                  Register
-                </NavLink>
-              </div>
-            )}
+            <div className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-950/50 border border-emerald-800/50 text-xs font-semibold text-emerald-300 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="hidden sm:inline">Open Access &bull; No Login Needed</span>
+              <span className="sm:hidden">Open Access</span>
+            </div>
           </div>
         </div>
       </header>

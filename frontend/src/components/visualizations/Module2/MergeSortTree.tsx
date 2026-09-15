@@ -437,6 +437,26 @@ export const MergeSortTree: React.FC = () => {
             </button>
             <button
               type="button"
+              onClick={() => {
+                const sampleLists = [
+                  [38, 27, 43, 3, 9, 82, 10],
+                  [64, 25, 12, 22, 11, 90],
+                  [5, 1, 9, 3, 7, 6, 8, 2, 4],
+                  [99, 45, 12, 78, 34, 23, 67, 89],
+                  [15, 3, 28, 7, 42, 19, 33],
+                ];
+                const picked = sampleLists[Math.floor(Math.random() * sampleLists.length)];
+                const str = picked.join(', ');
+                setInputStr(str);
+                handleApplyInput(str);
+              }}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-bold shadow-md shadow-amber-500/20 transition-all inline-flex items-center space-x-1.5 cursor-pointer"
+              title="Automatically generate random input data"
+            >
+              <span>🎲 Autofill</span>
+            </button>
+            <button
+              type="button"
               onClick={handleRun}
               disabled={loading}
               className="px-6 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow-lg shadow-amber-500/20 transition-all inline-flex items-center space-x-2 disabled:opacity-50"

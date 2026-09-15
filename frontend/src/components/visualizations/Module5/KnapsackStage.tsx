@@ -147,6 +147,20 @@ export const KnapsackStage: React.FC = () => {
             <span>{loading ? 'Computing Table...' : 'Execute 0/1 Knapsack'}</span>
           </button>
 
+          <button
+            type="button"
+            onClick={() => {
+              const nextIdx = (selectedPresetIdx + 1) % PRESETS.length;
+              setSelectedPresetIdx(nextIdx);
+              handleRun(nextIdx);
+            }}
+            disabled={loading}
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/20 transition-all inline-flex items-center space-x-1.5 cursor-pointer"
+            title="Autofill preset and run knapsack"
+          >
+            <span>🎲 Autofill &amp; Run</span>
+          </button>
+
           {traceData && (
             <button
               type="button"
@@ -230,9 +244,9 @@ export const KnapsackStage: React.FC = () => {
                 : 'Awaiting Run'
         }
         metrics={{
-          'Maximum Value Achieved': `$${currentStep?.metrics.max_value ?? 0}`,
-          'Optimal Items Selected': `${currentStep?.metrics.selected_count ?? 0} / ${activePreset.items.length}`,
-          'Total Weight Packed': `${currentStep?.metrics.total_weight ?? 0} / ${activePreset.capacity}`,
+          'Maximum Value Achieved': `$${currentStep?.metrics?.max_value ?? 0}`,
+          'Optimal Items Selected': `${currentStep?.metrics?.selected_count ?? 0} / ${activePreset.items.length}`,
+          'Total Weight Packed': `${currentStep?.metrics?.total_weight ?? 0} / ${activePreset.capacity}`,
           'Current Step': `${currentStepIndex + 1} / ${steps.length || 1}`,
         }}
         accentColor="emerald"

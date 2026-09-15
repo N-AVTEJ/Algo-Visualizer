@@ -16,7 +16,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.core.deps import get_current_user
+from typing import Optional
+from app.core.deps import get_current_user_optional
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.ai import AskRequest, AskResponse
@@ -33,21 +34,20 @@ router = APIRouter()
 )
 def ask(
     request: AskRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_current_user_optional),
     db: Session = Depends(get_db),
 ) -> AskResponse:
     """RAG-powered Q&A endpoint.
 
-    Requires authentication. API key costs are thus attributed per user session
-    and not exposed to anonymous callers.
+    Accessible to all users (including guests) without requiring login.
     """
     # Guard: AI is not usable without an API key.
-    if not settings.OPENAI_API_KEY:
+    if not settings.GEMINI_API_KEY and not settings.OPENAI_API_KEY:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=(
                 "AI assistant is not configured. "
-                "Set OPENAI_API_KEY in backend/.env to enable this feature."
+                "Set GEMINI_API_KEY in backend/.env to enable this feature."
             ),
         )
 

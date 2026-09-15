@@ -255,6 +255,6 @@ export const aiApi = {
     apiClient<AskResponse>('/ai/ask', {
       method: 'POST',
       body: JSON.stringify(data),
-      requiresAuth: true,
+      requiresAuth: false,
     }),
 };

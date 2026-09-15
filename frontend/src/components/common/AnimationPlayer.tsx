@@ -8,6 +8,7 @@ export interface AnimationPlayerProps<TStep = unknown> {
   isPlaying?: boolean;
   onPlayToggle?: (playing: boolean) => void;
   onReset?: () => void;
+  onComplete?: () => void;
   initialSpeedMs?: number;
   onSpeedChange?: (speedMs: number) => void;
   renderStep?: (step: TStep | undefined, index: number, isPlaying: boolean) => React.ReactNode;
@@ -29,6 +30,7 @@ export function AnimationPlayer<TStep = unknown>({
   children,
   showControls = true,
   className = '',
+  onComplete,
 }: AnimationPlayerProps<TStep>) {
   // Internal state when not fully controlled
   const [internalStepIndex, setInternalStepIndex] = useState<number>(0);
@@ -106,8 +108,15 @@ export function AnimationPlayer<TStep = unknown>({
       if (activeStepIndex >= steps.length - 1) {
         if (!isControlledPlay) setInternalIsPlaying(false);
         onPlayToggle?.(false);
+        if (steps.length > 1) {
+          onComplete?.();
+        }
       } else {
-        setStep(activeStepIndex + 1);
+        const nextIndex = activeStepIndex + 1;
+        setStep(nextIndex);
+        if (nextIndex === steps.length - 1 && steps.length > 1) {
+          onComplete?.();
+        }
       }
     }, speedMs);
 
@@ -122,6 +131,7 @@ export function AnimationPlayer<TStep = unknown>({
     isControlledPlay,
     onPlayToggle,
     setStep,
+    onComplete,
   ]);
 
   const currentStep = steps.length > 0 ? steps[activeStepIndex] : undefined;

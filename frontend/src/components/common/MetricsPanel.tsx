@@ -34,7 +34,7 @@ export const MetricsPanel: React.FC<MetricsPanelProps> = ({
     return key
       .replace(/([A-Z])/g, ' $1')
       .replace(/_/g, ' ')
-      .replace(/^\w/, (c) => c.toUpperCase())
+      .replace(/\b\w/g, (c) => c.toUpperCase())
       .trim();
   };
 

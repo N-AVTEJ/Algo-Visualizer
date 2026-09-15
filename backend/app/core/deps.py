@@ -56,3 +56,37 @@ def get_current_user(
         )
 
     return user
+
+
+def get_current_user_optional(
+    token: str | None = Depends(reusable_oauth2),
+    db: Session = Depends(get_db),
+) -> User:
+    """Return authenticated user or a shared default guest user so no login is required."""
+    if token:
+        try:
+            payload = jwt.decode(
+                token,
+                settings.SECRET_KEY,
+                algorithms=[settings.JWT_ALGORITHM],
+            )
+            user_id_str: str | None = payload.get("sub")
+            if user_id_str:
+                user = db.query(User).filter(User.id == int(user_id_str)).first()
+                if user:
+                    return user
+        except Exception:
+            pass
+
+    # Guest fallback: ensure a guest user exists in the database
+    guest = db.query(User).filter(User.email == "guest@algolens.dev").first()
+    if not guest:
+        guest = User(
+            email="guest@algolens.dev",
+            password_hash="guest_no_login_required",
+            role="student",
+        )
+        db.add(guest)
+        db.commit()
+        db.refresh(guest)
+    return guest

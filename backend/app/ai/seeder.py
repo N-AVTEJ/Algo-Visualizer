@@ -301,9 +301,9 @@ KNOWLEDGE_CHUNKS: list[dict[str, str]] = [
 
 def seed() -> None:
     """Embed all knowledge chunks and insert them into the database."""
-    if not settings.OPENAI_API_KEY:
+    if not settings.GEMINI_API_KEY and not settings.OPENAI_API_KEY:
         print(
-            "[seeder] ERROR: OPENAI_API_KEY is not set in backend/.env. "
+            "[seeder] ERROR: GEMINI_API_KEY (or OPENAI_API_KEY) is not set in backend/.env. "
             "Cannot embed curriculum content.",
             file=sys.stderr,
         )

@@ -3,7 +3,7 @@ import Prism from 'prismjs';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-javascript';
-import { Copy, Check, Code2 } from 'lucide-react';
+import { Copy, Check, Code2, Download } from 'lucide-react';
 
 export interface CodeDisplayProps {
   code: string;
@@ -19,6 +19,7 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
   showLineNumbers = true,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
   const [highlightedHtml, setHighlightedHtml] = useState('');
 
   useEffect(() => {
@@ -35,6 +36,27 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Ignore clipboard write failure
+    }
+  };
+
+  const handleDownload = () => {
+    try {
+      const ext = language === 'python' ? 'py' : language === 'typescript' ? 'ts' : 'js';
+      const cleanTitle = (title || 'algorithm').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+      const filename = `${cleanTitle}.${ext}`;
+      const blob = new Blob([code.trim()], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      setDownloaded(true);
+      setTimeout(() => setDownloaded(false), 2000);
+    } catch {
+      // Ignore download failure
     }
   };
 
@@ -60,24 +82,45 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
           )}
         </div>
 
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium inline-flex items-center space-x-1 transition-colors border border-slate-700/60 focus:outline-none focus:ring-2 focus:ring-violet-400"
-          title="Copy code to clipboard"
-        >
-          {copied ? (
-            <>
-              <Check className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400">Copied</span>
-            </>
-          ) : (
-            <>
-              <Copy className="w-3 h-3 text-slate-400" />
-              <span>Copy</span>
-            </>
-          )}
-        </button>
+        <div className="flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={handleDownload}
+            className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium inline-flex items-center space-x-1 transition-colors border border-slate-700/60 focus:outline-none focus:ring-2 focus:ring-violet-400"
+            title="Download algorithm script"
+          >
+            {downloaded ? (
+              <>
+                <Check className="w-3 h-3 text-emerald-400" />
+                <span className="text-emerald-400">Saved</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-3 h-3 text-slate-400" />
+                <span>Export</span>
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium inline-flex items-center space-x-1 transition-colors border border-slate-700/60 focus:outline-none focus:ring-2 focus:ring-violet-400"
+            title="Copy code to clipboard"
+          >
+            {copied ? (
+              <>
+                <Check className="w-3 h-3 text-emerald-400" />
+                <span className="text-emerald-400">Copied</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-3 h-3 text-slate-400" />
+                <span>Copy</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Code Body */}
