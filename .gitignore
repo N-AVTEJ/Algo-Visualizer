@@ -67,6 +67,7 @@ pnpm-debug.log*
 Thumbs.db
 .idea/
 .vscode/
+.kilo/
 *.suo
 *.ntvs*
 *.njsproj
