@@ -30,7 +30,7 @@ Open **two separate terminal windows** and run:
 
 ### Terminal 1: Frontend Web Application
 ```powershell
-cd Algo-Visualizer\frontend
+cd frontend
 npm run dev
 ```
 
@@ -40,7 +40,6 @@ npm run dev
 
 ### Terminal 2: Backend FastAPI Server
 ```powershell
-cd Algo-Visualizer
 cd backend
 .\venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
@@ -57,13 +56,13 @@ If you are setting up this repository for the first time:
 
 ### 1. Initialize Frontend
 ```powershell
-cd Algo-Visualizer\frontend
+cd frontend
 npm install
 ```
 
 ### 2. Initialize Backend & Database
 ```powershell
-cd Algo-Visualizer\backend
+cd backend
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
@@ -108,7 +107,7 @@ python -m app.db.seed
 The platform uses Google's Gemini SDK for its AI Assistant. Your API key is stored in `backend/.env`:
 
 ```env
-DATABASE_URL=postgresql://postgres:Navtej%402006@localhost:5432/algolens
+DATABASE_URL=postgresql://postgres:Name%402006@localhost:5432/algolens
 SECRET_KEY=136a6924fd0e02b54c3b7586a6877d8b39c773c7f5c095fe5828e6c72ff4a6d2
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
@@ -134,14 +133,14 @@ cd Algo-Visualizer\backend
 
 ### Frontend Component Tests (11 Vitest Tests)
 ```powershell
-cd Algo-Visualizer\frontend
+cd frontend
 npm test
 ```
 > Result: **`11 passed`** across 4 test suites. Verifies `AnimationPlayer`, `MetricsPanel`, `KnapsackStage`, and `CodeDisplay`.
 
 ### Frontend Production Build Validation
 ```powershell
-cd Algo-Visualizer\frontend
+cd frontend
 npm run build
 ```
 > Result: **`✓ built in ~10s`** with zero TypeScript or bundler errors.
