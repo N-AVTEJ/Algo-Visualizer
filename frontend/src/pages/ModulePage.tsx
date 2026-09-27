@@ -7,12 +7,9 @@ import {
   Code2,
   Cpu,
   Layers,
-  PlayCircle,
   RefreshCw,
   Sparkles,
   Video,
-  ChevronDown,
-  ChevronUp,
 } from 'lucide-react';
 import { modulesApi, algorithmsApi } from '../api/client';
 import { useModuleStore } from '../store/moduleStore';
@@ -28,47 +25,8 @@ import { KruskalStage } from '../components/visualizations/Module7';
 import { BranchBoundStage } from '../components/visualizations/Module8';
 import { SatStage } from '../components/visualizations/Module9';
 import { GraphColoringStage } from '../components/visualizations/Module10';
-
-// Fallback curated YouTube lecture embeds by algorithm key/name
-const YOUTUBE_LECTURE_FALLBACKS: Record<string, string> = {
-  'linear search': 'https://www.youtube.com/embed/C46QfTjVCNU',
-  'binary search': 'https://www.youtube.com/embed/C46QfTjVCNU',
-  'merge sort': 'https://www.youtube.com/embed/jlHkDBEumP0',
-  'quick sort': 'https://www.youtube.com/embed/7h1s2SojIRw',
-  'n-queens': 'https://www.youtube.com/embed/xFv_Hl4B83A',
-  'floyd-warshall': 'https://www.youtube.com/embed/oNI0rf2P9gE',
-  '0/1 knapsack': 'https://www.youtube.com/embed/nLmhmB6NzcM',
-  'knapsack': 'https://www.youtube.com/embed/nLmhmB6NzcM',
-  'job sequencing': 'https://www.youtube.com/embed/zPtI8q9gvX8',
-  'kruskal': 'https://www.youtube.com/embed/4ZlRH0eK-qQ',
-  'branch and bound': 'https://www.youtube.com/embed/yV1d-b_SkVA',
-  'sat': 'https://www.youtube.com/embed/e2UFfcqXA8A',
-  'graph coloring': 'https://www.youtube.com/embed/052VkKhIaQ4',
-};
-
-function getEmbedUrl(algo: Algorithm | null): string {
-  if (!algo) return '';
-  if (algo.video_url) {
-    // If it's a full watch URL: convert https://www.youtube.com/watch?v=XYZ to embed/XYZ
-    if (algo.video_url.includes('watch?v=')) {
-      const vid = algo.video_url.split('watch?v=')[1]?.split('&')[0];
-      return `https://www.youtube.com/embed/${vid}`;
-    }
-    if (algo.video_url.includes('youtu.be/')) {
-      const vid = algo.video_url.split('youtu.be/')[1]?.split('?')[0];
-      return `https://www.youtube.com/embed/${vid}`;
-    }
-    return algo.video_url;
-  }
-
-  const nameLower = algo.name.toLowerCase();
-  for (const [key, url] of Object.entries(YOUTUBE_LECTURE_FALLBACKS)) {
-    if (nameLower.includes(key)) {
-      return url;
-    }
-  }
-  return 'https://www.youtube.com/embed/nLmhmB6NzcM';
-}
+import { AlgorithmResultExplanation } from '../components/AlgorithmResultExplanation';
+import { AlgorithmVideoLecture } from '../components/AlgorithmVideoLecture';
 
 export const ModulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -82,7 +40,7 @@ export const ModulePage: React.FC = () => {
   const [algorithms, setAlgorithms] = useState<Algorithm[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<{ status?: number; message: string } | null>(null);
-  const [showVideo, setShowVideo] = useState(false);
+  const [showVideo, setShowVideo] = useState(true);
   const [justCompleted, setJustCompleted] = useState(false);
 
   useEffect(() => {
@@ -140,15 +98,15 @@ export const ModulePage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center py-24 space-y-4">
-        <RefreshCw className="w-10 h-10 text-violet-400 animate-spin" />
-        <p className="text-slate-400 text-sm">Loading module details and algorithms...</p>
+        <RefreshCw className="w-10 h-10 text-indigo-400 animate-spin" />
+        <p className="text-slate-400 text-sm">Loading module details and curriculum algorithms...</p>
       </div>
     );
   }
 
   if (error || !moduleData) {
     return (
-      <div className="max-w-2xl mx-auto my-12 p-8 rounded-2xl bg-slate-900/80 border border-slate-800 text-center space-y-6">
+      <div className="max-w-2xl mx-auto my-12 p-8 rounded-2xl bg-slate-900/80 border border-slate-800 text-center space-y-6 shadow-2xl">
         <div className="w-14 h-14 rounded-2xl bg-red-950/60 border border-red-800/60 text-red-400 flex items-center justify-center mx-auto">
           <AlertTriangle className="w-7 h-7" />
         </div>
@@ -163,7 +121,7 @@ export const ModulePage: React.FC = () => {
         <div className="pt-2">
           <Link
             to="/"
-            className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-colors"
+            className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm transition-all shadow-lg shadow-indigo-600/30"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Return to Modules Directory</span>
@@ -174,13 +132,12 @@ export const ModulePage: React.FC = () => {
   }
 
   const isCurrentAlgoCompleted = currentAlgorithm ? isCompleted(currentAlgorithm.id) : false;
-  const embedUrl = getEmbedUrl(currentAlgorithm);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-12">
       {/* Back Link & Breadcrumb */}
       <div className="flex items-center space-x-2 text-sm text-slate-400">
-        <Link to="/" className="hover:text-slate-200 inline-flex items-center space-x-1">
+        <Link to="/" className="hover:text-slate-200 inline-flex items-center space-x-1 transition-colors">
           <ArrowLeft className="w-4 h-4" />
           <span>Modules</span>
         </Link>
@@ -192,56 +149,61 @@ export const ModulePage: React.FC = () => {
 
       {/* Completion Toast Notification */}
       {justCompleted && (
-        <div className="p-4 rounded-xl bg-emerald-950/80 border border-emerald-600 text-emerald-300 flex items-center justify-between text-sm shadow-lg shadow-emerald-900/30 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="p-4 rounded-xl bg-emerald-950/80 border border-emerald-600 text-emerald-300 flex items-center justify-between text-sm shadow-xl shadow-emerald-950/40 animate-in fade-in duration-200">
           <div className="flex items-center space-x-2">
             <CheckCircle2 className="w-5 h-5 text-emerald-400" />
             <span className="font-bold">Algorithm Mastered! Progress recorded to your account.</span>
           </div>
-          <span className="text-xs font-mono text-emerald-400 font-semibold">+100 XP</span>
+          <span className="text-xs font-mono text-emerald-300 font-semibold px-2 py-0.5 rounded bg-emerald-900/60 border border-emerald-700/60">
+            +100 XP
+          </span>
         </div>
       )}
 
-      {/* Module Header */}
-      <div className="p-8 rounded-2xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+      {/* Module Header Banner */}
+      <div className="p-7 sm:p-9 rounded-3xl bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-indigo-950/30 border border-slate-800 shadow-xl backdrop-blur-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
-            <span className="px-3 py-1 rounded-md bg-violet-950/80 text-violet-300 border border-violet-800/60 text-xs font-mono font-semibold">
+            <span className="px-3.5 py-1 rounded-full bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 text-xs font-mono font-semibold">
               Module {moduleData.order_index} of 10
             </span>
-            <span className="text-xs text-slate-500 font-medium">DAA Syllabus Focus</span>
+            <span className="text-xs text-slate-400 font-medium">DAA Syllabus Focus</span>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setShowVideo(!showVideo)}
+            className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-xs font-medium text-slate-300 hover:text-white border border-slate-700/80 inline-flex items-center space-x-2 transition-all shadow-sm"
+          >
+            <Video className="w-3.5 h-3.5 text-indigo-400" />
+            <span>{showVideo ? 'Hide Video Lecture' : 'Show Video Lecture'}</span>
+          </button>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-3">{moduleData.name}</h1>
+
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight">
+          {moduleData.name}
+        </h1>
         <p className="text-sm sm:text-base text-slate-300 max-w-4xl leading-relaxed">
           {moduleData.description || 'Foundational algorithm module in academic DAA curriculum.'}
         </p>
       </div>
 
-      {/* Algorithm Selector & Video Toggle */}
+      {/* Algorithm Selector Chips */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-white flex items-center space-x-2">
-            <Layers className="w-5 h-5 text-violet-400" />
+          <h2 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
+            <Layers className="w-4 h-4 text-indigo-400" />
             <span>Curriculum Algorithms</span>
           </h2>
-          <div className="flex items-center space-x-3">
-            <button
-              type="button"
-              onClick={() => setShowVideo(!showVideo)}
-              className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-violet-500/50 text-xs font-medium text-slate-300 hover:text-white inline-flex items-center space-x-1.5 transition-colors"
-            >
-              <Video className="w-3.5 h-3.5 text-violet-400" />
-              <span>{showVideo ? 'Hide Lecture' : 'Video Lecture'}</span>
-              {showVideo ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-            </button>
-            <span className="text-xs text-slate-400">
-              {algorithms.length} {algorithms.length === 1 ? 'algorithm' : 'algorithms'}
-            </span>
-          </div>
+          <span className="text-xs text-slate-400">
+            {algorithms.length} {algorithms.length === 1 ? 'algorithm' : 'algorithms'}
+          </span>
         </div>
 
         {algorithms.length === 0 ? (
-          <div className="p-6 rounded-xl bg-slate-900/40 border border-slate-800 text-center text-sm text-slate-400">
+          <div className="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 text-center text-sm text-slate-400">
             No algorithms registered under this module yet.
           </div>
         ) : (
@@ -254,9 +216,9 @@ export const ModulePage: React.FC = () => {
                   key={algo.id}
                   type="button"
                   onClick={() => setCurrentAlgorithm(algo)}
-                  className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all inline-flex items-center space-x-2 border focus:outline-none focus:ring-2 focus:ring-violet-400 ${
+                  className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all inline-flex items-center space-x-2 border focus:outline-none ${
                     isSelected
-                      ? 'bg-violet-600 text-white border-violet-500 shadow-md shadow-violet-600/30'
+                      ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white border-indigo-500/80 shadow-lg shadow-indigo-600/25 scale-[1.02]'
                       : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
                   }`}
                 >
@@ -272,65 +234,42 @@ export const ModulePage: React.FC = () => {
         )}
       </section>
 
-      {/* Embedded YouTube Video Lecture Section */}
-      {showVideo && embedUrl && (
-        <div className="p-6 rounded-2xl bg-slate-900/80 border border-violet-800/40 space-y-4 animate-in fade-in duration-300 shadow-xl">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div className="flex items-center space-x-2 text-sm font-bold text-white">
-              <PlayCircle className="w-5 h-5 text-violet-400" />
-              <span>Video Lecture: {currentAlgorithm?.name}</span>
-            </div>
-            <span className="text-xs text-slate-400 font-mono">Academic DAA Walkthrough</span>
-          </div>
-
-          <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
-            <iframe
-              src={embedUrl}
-              title={`Video Lecture - ${currentAlgorithm?.name}`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              className="absolute inset-0 w-full h-full"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Selected Algorithm Details / Complexity Pills & Completion Status */}
+      {/* Selected Algorithm Details / Complexity & Completion Action */}
       {currentAlgorithm && (
-        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/40 border border-slate-800 text-xs text-slate-300">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300 backdrop-blur-sm">
           <div className="flex flex-wrap items-center gap-6">
             <div>
-              <span className="text-slate-500 block">Selected:</span>
-              <span className="font-semibold text-white">{currentAlgorithm.name}</span>
+              <span className="text-slate-500 block text-[11px]">Selected Algorithm:</span>
+              <span className="font-semibold text-white text-sm">{currentAlgorithm.name}</span>
             </div>
             {currentAlgorithm.time_complexity && (
               <div>
-                <span className="text-slate-500 block">Time Complexity:</span>
-                <span className="font-mono text-violet-300 font-bold">{currentAlgorithm.time_complexity}</span>
+                <span className="text-slate-500 block text-[11px]">Time Complexity:</span>
+                <span className="font-mono text-indigo-300 font-bold">{currentAlgorithm.time_complexity}</span>
               </div>
             )}
             {currentAlgorithm.space_complexity && (
               <div>
-                <span className="text-slate-500 block">Space Complexity:</span>
-                <span className="font-mono text-sky-300 font-bold">{currentAlgorithm.space_complexity}</span>
+                <span className="text-slate-500 block text-[11px]">Space Complexity:</span>
+                <span className="font-mono text-slate-300 font-bold">{currentAlgorithm.space_complexity}</span>
               </div>
             )}
           </div>
 
           <div className="flex items-center space-x-3">
             {isCurrentAlgoCompleted ? (
-              <span className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 font-semibold text-xs">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Completed</span>
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 font-semibold text-xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Mastered</span>
               </span>
             ) : (
               <button
                 type="button"
                 onClick={handleMarkCompleted}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white font-medium text-xs border border-slate-700 transition-colors inline-flex items-center space-x-1.5"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white font-medium text-xs border border-slate-700 transition-all inline-flex items-center space-x-1.5 shadow-sm"
                 title="Mark this algorithm as completed in your progress record"
               >
-                <CheckCircle2 className="w-3.5 h-3.5" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-slate-400 group-hover:text-white" />
                 <span>Mark as Done</span>
               </button>
             )}
@@ -338,64 +277,78 @@ export const ModulePage: React.FC = () => {
         </div>
       )}
 
-      {/* Primary Workspace: Modules 1-10 Visualizers */}
-      {moduleData.id === 1 ? (
-        <ComparisonArena />
-      ) : moduleData.id === 2 ? (
-        <MergeSortTree />
-      ) : moduleData.id === 3 ? (
-        <BacktrackingStage />
-      ) : moduleData.id === 4 ? (
-        <FloydWarshallStage />
-      ) : moduleData.id === 5 ? (
-        <KnapsackStage />
-      ) : moduleData.id === 6 ? (
-        <JobSequencingStage />
-      ) : moduleData.id === 7 ? (
-        <KruskalStage />
-      ) : moduleData.id === 8 ? (
-        <BranchBoundStage />
-      ) : moduleData.id === 9 ? (
-        <SatStage />
-      ) : moduleData.id === 10 ? (
-        <GraphColoringStage />
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Visualization Area Placeholder */}
-          <div className="lg:col-span-3 min-h-[380px] p-8 rounded-2xl bg-slate-900/50 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-violet-950/40 border border-violet-800/40 text-violet-400 flex items-center justify-center">
-              <Sparkles className="w-8 h-8" />
-            </div>
-            <div className="max-w-md">
-              <h3 className="text-lg font-bold text-white mb-1">Visualization Area</h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Interactive visualization canvas with step-by-step playback engine will be
-                implemented in subsequent phases for this module.
-              </p>
-            </div>
-            <div className="px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-slate-400 text-xs font-mono">
-              Module {moduleData.order_index} Stage &bull; Visualization Engine Scheduled
-            </div>
-          </div>
-
-          {/* Metrics Panel Placeholder */}
-          <div className="lg:col-span-1 min-h-[380px] p-6 rounded-2xl bg-slate-900/50 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
-            <div className="w-12 h-12 rounded-xl bg-indigo-950/40 border border-indigo-800/40 text-indigo-400 flex items-center justify-center">
-              <Cpu className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-white mb-1">Metrics Panel</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Telemetry counters (comparisons, memory allocations, operations) will be connected
-                here during visualization engine integration.
-              </p>
-            </div>
-            <div className="px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 text-xs font-mono">
-              Telemetry Idle
-            </div>
-          </div>
-        </div>
+      {/* 1. Curated Educational YouTube Video Lecture for each module & algorithm */}
+      {showVideo && (
+        <AlgorithmVideoLecture
+          algorithmName={currentAlgorithm?.name}
+          moduleId={moduleData.id}
+        />
       )}
+
+      {/* 2. Primary Interactive Visualization Workspace: Modules 1-10 */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
+            <Sparkles className="w-4 h-4 text-indigo-400" />
+            <span>Interactive Visualizer Stage</span>
+          </h2>
+          <span className="text-xs font-mono text-slate-500">Frame-by-frame execution</span>
+        </div>
+
+        {moduleData.id === 1 ? (
+          <ComparisonArena />
+        ) : moduleData.id === 2 ? (
+          <MergeSortTree />
+        ) : moduleData.id === 3 ? (
+          <BacktrackingStage />
+        ) : moduleData.id === 4 ? (
+          <FloydWarshallStage />
+        ) : moduleData.id === 5 ? (
+          <KnapsackStage />
+        ) : moduleData.id === 6 ? (
+          <JobSequencingStage />
+        ) : moduleData.id === 7 ? (
+          <KruskalStage />
+        ) : moduleData.id === 8 ? (
+          <BranchBoundStage />
+        ) : moduleData.id === 9 ? (
+          <SatStage />
+        ) : moduleData.id === 10 ? (
+          <GraphColoringStage />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="lg:col-span-3 min-h-[380px] p-8 rounded-2xl bg-slate-900/50 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
+              <div className="w-16 h-16 rounded-2xl bg-indigo-950/40 border border-indigo-800/40 text-indigo-400 flex items-center justify-center">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <div className="max-w-md">
+                <h3 className="text-lg font-bold text-white mb-1">Visualization Area</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  Interactive visualization canvas with step-by-step playback engine.
+                </p>
+              </div>
+            </div>
+
+            <div className="lg:col-span-1 min-h-[380px] p-6 rounded-2xl bg-slate-900/50 border-2 border-dashed border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-indigo-950/40 border border-indigo-800/40 text-indigo-400 flex items-center justify-center">
+                <Cpu className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white mb-1">Metrics Panel</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Telemetry counters connected during visualization execution.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* 3. Post-Execution Step-by-Step Verbal Deduction (How it came up to the results in words) */}
+      <AlgorithmResultExplanation
+        moduleId={moduleData.id}
+        currentAlgorithmName={currentAlgorithm?.name}
+      />
     </div>
   );
 };
