@@ -150,13 +150,13 @@ export const HomePage: React.FC = () => {
       {/* Scroll Progress Bar and Floating Quick Jump */}
       <ScrollProgressIndicator />
 
-      {/* Hero Section Ambient Glow Orbs */}
+      {/* Hero Section Ambient Soft Glow Orbs */}
       <motion.div
-        className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-gradient-to-b from-violet-600/20 via-indigo-600/10 to-transparent blur-3xl pointer-events-none -z-10 rounded-full"
+        className="absolute -top-40 left-1/2 -translate-x-1/2 w-[720px] h-[480px] bg-gradient-to-b from-indigo-500/15 via-violet-500/10 to-transparent blur-3xl pointer-events-none -z-10 rounded-full"
         style={{ y: heroOrbY, opacity: heroOrbOpacity }}
       />
-      <div className="absolute top-80 right-0 w-96 h-96 bg-cyan-500/10 blur-3xl pointer-events-none -z-10 rounded-full" />
-      <div className="absolute top-[900px] left-0 w-96 h-96 bg-violet-600/10 blur-3xl pointer-events-none -z-10 rounded-full" />
+      <div className="absolute top-80 right-0 w-96 h-96 bg-indigo-500/5 blur-3xl pointer-events-none -z-10 rounded-full" />
+      <div className="absolute top-[900px] left-0 w-96 h-96 bg-violet-500/5 blur-3xl pointer-events-none -z-10 rounded-full" />
 
       {/* 1. HERO SECTION */}
       <section className="text-center max-w-5xl mx-auto pt-6 sm:pt-10 px-2">
@@ -165,12 +165,12 @@ export const HomePage: React.FC = () => {
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center space-x-2.5 px-4 py-2 rounded-full bg-slate-900/90 border border-violet-700/50 text-violet-300 text-xs font-semibold mb-8 shadow-lg shadow-violet-950/40 backdrop-blur-md"
+          className="inline-flex items-center space-x-2.5 px-4 py-2 rounded-full bg-[#0E1322]/90 border border-slate-700/60 text-slate-300 text-xs font-semibold mb-8 shadow-xl backdrop-blur-xl"
         >
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
           <span>DAA Curriculum Visualizer 2.0</span>
-          <span className="text-slate-500">&bull;</span>
-          <span className="text-slate-300">10 Modules &bull; Real-Time Telemetry</span>
+          <span className="text-slate-600">&bull;</span>
+          <span className="text-slate-400">10 Modules &bull; Real-Time Telemetry</span>
         </motion.div>
 
         {/* Main Headline */}
@@ -181,7 +181,7 @@ export const HomePage: React.FC = () => {
           className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.1]"
         >
           Master Algorithms Through{' '}
-          <span className="bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-indigo-200 via-violet-200 to-amber-100 bg-clip-text text-transparent">
             Visual Execution
           </span>
         </motion.h1>
@@ -206,7 +206,7 @@ export const HomePage: React.FC = () => {
         >
           <a
             href="#curriculum-modules"
-            className="px-7 py-3.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm shadow-xl shadow-violet-600/30 hover:shadow-violet-600/50 hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center space-x-2"
+            className="px-7 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold text-sm shadow-xl shadow-indigo-600/25 hover:scale-[1.02] active:scale-[0.98] transition-all inline-flex items-center space-x-2"
           >
             <span>Explore 10 Modules</span>
             <ArrowRight className="w-4 h-4" />
@@ -214,17 +214,17 @@ export const HomePage: React.FC = () => {
 
           <a
             href="#live-stage"
-            className="px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm transition-all inline-flex items-center space-x-2 hover:border-violet-500/50 shadow-lg"
+            className="px-6 py-3.5 rounded-xl bg-[#0E1322]/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 font-semibold text-sm transition-all inline-flex items-center space-x-2 hover:border-indigo-500/50 shadow-lg"
           >
-            <Play className="w-4 h-4 text-violet-400" />
+            <Play className="w-4 h-4 text-indigo-400" />
             <span>Try Interactive Sandbox</span>
           </a>
 
           <Link
             to="/compare"
-            className="px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm transition-all inline-flex items-center space-x-2 hover:border-indigo-500/50 shadow-lg"
+            className="px-6 py-3.5 rounded-xl bg-[#0E1322]/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 font-semibold text-sm transition-all inline-flex items-center space-x-2 hover:border-indigo-500/50 shadow-lg"
           >
-            <GitCompare className="w-4 h-4 text-cyan-400" />
+            <GitCompare className="w-4 h-4 text-amber-400" />
             <span>Algorithm Race Mode</span>
           </Link>
         </motion.div>
@@ -236,25 +236,25 @@ export const HomePage: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto pt-2"
         >
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm text-left">
+          <div className="p-4 rounded-2xl bg-[#0E1322]/80 border border-slate-800/90 backdrop-blur-sm text-left">
             <div className="text-2xl sm:text-3xl font-extrabold font-mono text-white">10</div>
             <div className="text-xs text-slate-400 mt-1 font-medium">Curriculum Modules</div>
-            <div className="text-[10px] text-violet-400 font-mono mt-0.5">Asymptotic to NP-C</div>
+            <div className="text-[10px] text-indigo-400 font-mono mt-0.5">Asymptotic to NP-C</div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm text-left">
-            <div className="text-2xl sm:text-3xl font-extrabold font-mono text-cyan-400">30+</div>
+          <div className="p-4 rounded-2xl bg-[#0E1322]/80 border border-slate-800/90 backdrop-blur-sm text-left">
+            <div className="text-2xl sm:text-3xl font-extrabold font-mono text-indigo-300">30+</div>
             <div className="text-xs text-slate-400 mt-1 font-medium">Interactive Algos</div>
-            <div className="text-[10px] text-cyan-500 font-mono mt-0.5">Step-by-step states</div>
+            <div className="text-[10px] text-indigo-400 font-mono mt-0.5">Step-by-step states</div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm text-left">
-            <div className="text-2xl sm:text-3xl font-extrabold font-mono text-indigo-400">0 ms</div>
+          <div className="p-4 rounded-2xl bg-[#0E1322]/80 border border-slate-800/90 backdrop-blur-sm text-left">
+            <div className="text-2xl sm:text-3xl font-extrabold font-mono text-amber-300">0 ms</div>
             <div className="text-xs text-slate-400 mt-1 font-medium">Scrub Latency</div>
-            <div className="text-[10px] text-indigo-400 font-mono mt-0.5">Deterministic trace</div>
+            <div className="text-[10px] text-amber-400 font-mono mt-0.5">Deterministic trace</div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm text-left">
+          <div className="p-4 rounded-2xl bg-[#0E1322]/80 border border-slate-800/90 backdrop-blur-sm text-left">
             <div className="text-2xl sm:text-3xl font-extrabold font-mono text-emerald-400">100%</div>
             <div className="text-xs text-slate-400 mt-1 font-medium">Open Classroom Access</div>
             <div className="text-[10px] text-emerald-400 font-mono mt-0.5">No login required</div>
@@ -382,10 +382,10 @@ export const HomePage: React.FC = () => {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${
                     active
-                      ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30'
-                      : 'bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800'
+                      ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/20 font-semibold'
+                      : 'bg-[#0E1322]/90 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800'
                   }`}
                 >
                   {cat}
@@ -402,7 +402,7 @@ export const HomePage: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search algorithms, paradigms..."
-              className="w-full bg-slate-900/90 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors"
+              className="w-full bg-[#0B0F19]/90 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
             />
             {searchQuery && (
               <button
