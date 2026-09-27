@@ -179,20 +179,20 @@ export const InteractiveHeroStage: React.FC = () => {
   const maxVal = Math.max(...currentStep.array, 90);
 
   return (
-    <div className="w-full rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/80 to-slate-950/90 border border-slate-800/80 p-5 sm:p-7 shadow-2xl backdrop-blur-xl relative overflow-hidden group">
-      {/* Decorative top ambient light */}
-      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-28 bg-violet-600/20 blur-3xl pointer-events-none" />
+    <div className="w-full rounded-3xl bg-gradient-to-b from-[#0F1423]/90 via-[#0B0F19]/80 to-[#07090F]/90 border border-slate-800/80 p-5 sm:p-7 shadow-2xl backdrop-blur-xl relative overflow-hidden group">
+      {/* Decorative top ambient soft glow */}
+      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-28 bg-indigo-500/15 blur-3xl pointer-events-none" />
 
       {/* Top Header & Simulation Controls */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800/80">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
-            <Activity className="w-5 h-5 animate-pulse" />
+          <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+            <Activity className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
               <span className="text-sm font-bold text-white tracking-wide">Live Execution Engine</span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-950/80 border border-emerald-800/60 text-emerald-400">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-950/70 border border-emerald-800/60 text-emerald-300">
                 ACTIVE
               </span>
             </div>
@@ -204,10 +204,10 @@ export const InteractiveHeroStage: React.FC = () => {
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-md ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-md ${
               isPlaying
                 ? 'bg-amber-600 hover:bg-amber-500 text-white'
-                : 'bg-violet-600 hover:bg-violet-500 text-white shadow-violet-600/30'
+                : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-indigo-600/25'
             }`}
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
@@ -217,7 +217,7 @@ export const InteractiveHeroStage: React.FC = () => {
           <button
             onClick={handleNextStep}
             disabled={currentStepIndex >= steps.length - 1}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 text-xs font-semibold flex items-center space-x-1 transition-colors border border-slate-700"
+            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 text-xs font-semibold flex items-center space-x-1 transition-colors border border-slate-700"
           >
             <span>Step</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -226,7 +226,7 @@ export const InteractiveHeroStage: React.FC = () => {
           <button
             onClick={handleReset}
             title="Reset"
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700"
+            className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
@@ -234,7 +234,7 @@ export const InteractiveHeroStage: React.FC = () => {
           <button
             onClick={handleShuffle}
             title="Shuffle Values"
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700"
+            className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors border border-slate-700"
           >
             <Shuffle className="w-3.5 h-3.5" />
           </button>
@@ -242,7 +242,7 @@ export const InteractiveHeroStage: React.FC = () => {
       </div>
 
       {/* Array Bars Visualization Canvas */}
-      <div className="bg-slate-950/70 rounded-xl p-4 sm:p-6 border border-slate-800/60 mb-5 min-h-[190px] flex flex-col justify-end">
+      <div className="bg-[#07090F]/90 rounded-2xl p-4 sm:p-6 border border-slate-800/80 mb-5 min-h-[190px] flex flex-col justify-end">
         <div className="flex items-end justify-between gap-2 sm:gap-4 h-36 px-2">
           {currentStep.array.map((value, idx) => {
             const isComparing = currentStep.comparing.includes(idx);
@@ -251,13 +251,13 @@ export const InteractiveHeroStage: React.FC = () => {
 
             let barBg = 'bg-slate-800 border-slate-700 text-slate-400';
             if (isPivot) {
-              barBg = 'bg-amber-500 border-amber-400 shadow-lg shadow-amber-500/30 text-amber-950 font-bold';
+              barBg = 'bg-gradient-to-t from-indigo-700 to-indigo-500 border-indigo-300 shadow-lg shadow-indigo-500/25 text-white font-bold';
             } else if (isComparing) {
-              barBg = 'bg-cyan-500 border-cyan-300 shadow-lg shadow-cyan-500/30 text-cyan-950 font-bold';
+              barBg = 'bg-gradient-to-t from-amber-600 to-amber-400 border-amber-300 shadow-lg shadow-amber-500/25 text-amber-950 font-bold';
             } else if (isSorted) {
-              barBg = 'bg-emerald-500/90 border-emerald-400 text-emerald-950 font-bold';
+              barBg = 'bg-gradient-to-t from-emerald-600 to-teal-500 border-emerald-300 text-emerald-950 font-bold shadow-md shadow-emerald-500/20';
             } else {
-              barBg = 'bg-gradient-to-t from-violet-900/60 to-violet-600/70 border-violet-500/40 text-violet-200';
+              barBg = 'bg-gradient-to-t from-slate-800 to-slate-700 border-slate-600 text-slate-200';
             }
 
             const heightPct = Math.max(18, (value / maxVal) * 100);
@@ -268,33 +268,33 @@ export const InteractiveHeroStage: React.FC = () => {
                 <motion.div
                   layout
                   transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-                  className={`w-full rounded-t-lg border flex items-center justify-center transition-colors duration-300 ${barBg}`}
+                  className={`w-full rounded-t-xl border flex items-center justify-center transition-colors duration-300 ${barBg}`}
                   style={{ height: `${heightPct}%` }}
                 >
                   {isPivot && <span className="text-[9px] uppercase tracking-tighter">P</span>}
                 </motion.div>
-                <span className="text-[9px] font-mono text-slate-600 mt-1">[{idx}]</span>
+                <span className="text-[9px] font-mono text-slate-500 mt-1">[{idx}]</span>
               </div>
             );
           })}
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-4 pt-3 border-t border-slate-800/60 text-[11px] text-slate-400">
+        <div className="flex flex-wrap items-center justify-center gap-4 mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-slate-400">
           <div className="flex items-center space-x-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-violet-600" />
+            <span className="w-2.5 h-2.5 rounded-sm bg-slate-700 border border-slate-600" />
             <span>Unsorted</span>
           </div>
           <div className="flex items-center space-x-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-amber-500" />
+            <span className="w-2.5 h-2.5 rounded-sm bg-indigo-500 border border-indigo-400" />
             <span>Pivot</span>
           </div>
           <div className="flex items-center space-x-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-cyan-400" />
+            <span className="w-2.5 h-2.5 rounded-sm bg-amber-400 border border-amber-300" />
             <span>Active Comparison</span>
           </div>
           <div className="flex items-center space-x-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500" />
+            <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 border border-emerald-400" />
             <span>Sorted Position</span>
           </div>
         </div>
@@ -303,8 +303,8 @@ export const InteractiveHeroStage: React.FC = () => {
       {/* Execution Telemetry Footer */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {/* Step description */}
-        <div className="md:col-span-2 bg-slate-950/80 rounded-xl p-3 border border-slate-800 flex items-start space-x-2">
-          <Terminal className="w-4 h-4 text-violet-400 mt-0.5 shrink-0" />
+        <div className="md:col-span-2 bg-[#07090F]/90 rounded-xl p-3 border border-slate-800 flex items-start space-x-2">
+          <Terminal className="w-4 h-4 text-indigo-400 mt-0.5 shrink-0" />
           <div className="text-xs">
             <div className="text-[10px] uppercase font-mono text-slate-500 tracking-wider">
               Step {currentStepIndex + 1} / {steps.length}
@@ -314,20 +314,20 @@ export const InteractiveHeroStage: React.FC = () => {
         </div>
 
         {/* Live Counters */}
-        <div className="bg-slate-950/80 rounded-xl p-3 border border-slate-800 flex items-center justify-around text-center">
+        <div className="bg-[#07090F]/90 rounded-xl p-3 border border-slate-800 flex items-center justify-around text-center">
           <div>
             <div className="text-[10px] uppercase font-mono text-slate-500">Comparisons</div>
-            <div className="text-base font-bold font-mono text-cyan-400">{currentStep.comparisons}</div>
+            <div className="text-base font-bold font-mono text-amber-300">{currentStep.comparisons}</div>
           </div>
           <div className="w-px h-8 bg-slate-800" />
           <div>
             <div className="text-[10px] uppercase font-mono text-slate-500">Swaps</div>
-            <div className="text-base font-bold font-mono text-amber-400">{currentStep.swaps}</div>
+            <div className="text-base font-bold font-mono text-indigo-300">{currentStep.swaps}</div>
           </div>
           <div className="w-px h-8 bg-slate-800" />
           <div>
             <div className="text-[10px] uppercase font-mono text-slate-500">Complexity</div>
-            <div className="text-xs font-bold font-mono text-violet-400">O(n log n)</div>
+            <div className="text-xs font-bold font-mono text-slate-300">O(n log n)</div>
           </div>
         </div>
       </div>
