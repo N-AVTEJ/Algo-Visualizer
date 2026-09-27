@@ -40,7 +40,6 @@ npm run dev
 
 ### Terminal 2: Backend FastAPI Server
 ```powershell
-cd Algo-Visualizer
 cd backend
 .\venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
@@ -57,13 +56,13 @@ If you are setting up this repository for the first time:
 
 ### 1. Initialize Frontend
 ```powershell
-cd Algo-Visualizer\frontend
+cd frontend
 npm install
 ```
 
 ### 2. Initialize Backend & Database
 ```powershell
-cd Algo-Visualizer\backend
+cd backend
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
