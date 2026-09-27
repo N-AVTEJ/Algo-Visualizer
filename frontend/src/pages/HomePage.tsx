@@ -451,13 +451,13 @@ export const HomePage: React.FC = () => {
               >
                 <Link
                   to={`/module/${mod.id}`}
-                  className="group h-full p-6 rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950 border border-slate-800/80 hover:border-violet-500/60 transition-all flex flex-col justify-between shadow-lg hover:shadow-2xl hover:shadow-violet-600/10"
+                  className="group h-full p-6 rounded-3xl bg-gradient-to-b from-[#0F1423]/90 to-[#07090F] border border-slate-800/80 hover:border-indigo-500/50 transition-all flex flex-col justify-between shadow-xl hover:shadow-2xl hover:shadow-indigo-500/10"
                 >
                   <div>
                     {/* Top Badges */}
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
-                        <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-violet-950/80 text-violet-300 border border-violet-800/50">
+                        <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-indigo-950/70 text-indigo-300 border border-indigo-800/50">
                           Module {mod.order_index}
                         </span>
                         <span className="text-[11px] font-mono text-slate-400">
@@ -476,14 +476,14 @@ export const HomePage: React.FC = () => {
                           <span>{completedInMod}/{algos.length}</span>
                         </span>
                       ) : (
-                        <span className="text-[11px] text-slate-500 font-mono group-hover:text-violet-400 transition-colors">
+                        <span className="text-[11px] text-slate-500 font-mono group-hover:text-indigo-400 transition-colors">
                           Ready &rarr;
                         </span>
                       )}
                     </div>
 
                     {/* Module Title */}
-                    <h3 className="text-lg font-bold text-white group-hover:text-violet-300 transition-colors mb-2">
+                    <h3 className="text-lg font-bold text-white group-hover:text-indigo-300 transition-colors mb-2">
                       {mod.name}
                     </h3>
 
@@ -501,7 +501,7 @@ export const HomePage: React.FC = () => {
                         {mod.key_algorithms.slice(0, 3).map((algoName) => (
                           <span
                             key={algoName}
-                            className="text-[11px] px-2 py-0.5 rounded-md bg-slate-950/70 text-slate-300 border border-slate-800/80 group-hover:border-slate-700 transition-colors"
+                            className="text-[11px] px-2 py-0.5 rounded-md bg-[#07090F] text-slate-300 border border-slate-800/80 group-hover:border-slate-700 transition-colors"
                           >
                             {algoName}
                           </span>
@@ -518,14 +518,14 @@ export const HomePage: React.FC = () => {
                   {/* Card Footer: Complexity & Enter Action */}
                   <div className="pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs">
                     <div className="flex items-center space-x-2">
-                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-violet-950/50 text-violet-300 border border-violet-800/40">
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-indigo-950/50 text-indigo-300 border border-indigo-800/40">
                         {mod.time_complexity}
                       </span>
                     </div>
 
                     <div className="flex items-center space-x-1 text-slate-400 group-hover:text-white font-semibold transition-colors">
                       <span>Launch Stage</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform text-violet-400" />
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform text-indigo-400" />
                     </div>
                   </div>
                 </Link>
@@ -669,14 +669,14 @@ export const HomePage: React.FC = () => {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.6 }}
-        className="rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-violet-950/60 via-slate-900 to-indigo-950/60 border border-violet-800/40 text-center relative overflow-hidden shadow-2xl"
+        className="rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-[#0F1424] via-[#0B0F19] to-indigo-950/40 border border-indigo-900/40 text-center relative overflow-hidden shadow-2xl"
       >
-        <div className="absolute top-0 right-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-2xl mx-auto space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-violet-900/60 border border-violet-700/60 text-violet-300 text-xs font-semibold">
-            <Zap className="w-4 h-4 text-violet-400" />
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-700/60 text-indigo-300 text-xs font-semibold">
+            <Zap className="w-4 h-4 text-indigo-400" />
             <span>Ready for Lectures, Interviews, and Exams</span>
           </div>
 
@@ -692,7 +692,7 @@ export const HomePage: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             <Link
               to="/module/1"
-              className="px-8 py-3.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-sm shadow-xl shadow-violet-600/30 hover:scale-105 transition-all inline-flex items-center space-x-2"
+              className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 hover:scale-105 transition-all inline-flex items-center space-x-2"
             >
               <span>Launch Module 1: Algorithm Analysis</span>
               <ArrowRight className="w-4 h-4" />
@@ -700,9 +700,9 @@ export const HomePage: React.FC = () => {
 
             <Link
               to="/ai-assistant"
-              className="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm transition-all inline-flex items-center space-x-2"
+              className="px-6 py-3.5 rounded-xl bg-[#0E1322] hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-sm transition-all inline-flex items-center space-x-2"
             >
-              <Bot className="w-4 h-4 text-violet-400" />
+              <Bot className="w-4 h-4 text-indigo-400" />
               <span>Ask AI Assistant</span>
             </Link>
           </div>
