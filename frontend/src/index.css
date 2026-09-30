@@ -11,7 +11,12 @@
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar (Modern cross-browser standard + WebKit fallback) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1E293B #07090F;
+}
+
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;

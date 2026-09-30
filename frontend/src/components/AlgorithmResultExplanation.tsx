@@ -542,12 +542,15 @@ export const AlgorithmResultExplanation: React.FC<Props> = ({
   return (
     <div className="rounded-2xl bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-950 border border-slate-800 shadow-2xl backdrop-blur-xl overflow-hidden mt-8 transition-all">
       {/* Header with Toggle */}
-      <div
+      <button
+        type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="p-5 sm:p-6 flex items-center justify-between cursor-pointer hover:bg-slate-800/40 transition-colors border-b border-slate-800/80"
+        aria-expanded={isExpanded}
+        aria-controls="algorithm-explanation-content"
+        className="w-full text-left p-5 sm:p-6 flex items-center justify-between cursor-pointer hover:bg-slate-800/40 transition-colors border-b border-slate-800/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/80"
       >
         <div className="flex items-center space-x-3.5">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500/20 to-violet-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500/20 to-violet-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
@@ -565,18 +568,15 @@ export const AlgorithmResultExplanation: React.FC<Props> = ({
           </div>
         </div>
 
-        <button
-          type="button"
-          aria-label={isExpanded ? 'Collapse explanation' : 'Expand explanation'}
-          className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors border border-slate-700"
-        >
+        <div className="p-2 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 ml-4 shrink-0">
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
-      </div>
+        </div>
+      </button>
 
       <AnimatePresence>
         {isExpanded && (
           <motion.div
+            id="algorithm-explanation-content"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -636,8 +636,17 @@ export const AlgorithmResultExplanation: React.FC<Props> = ({
                   return (
                     <div
                       key={step.stepNumber}
+                      role="button"
+                      tabIndex={0}
+                      aria-pressed={isSelected}
                       onClick={() => setActiveStepTab(isSelected ? null : idx)}
-                      className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setActiveStepTab(isSelected ? null : idx);
+                        }
+                      }}
+                      className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/70 ${
                         isSelected
                           ? 'bg-slate-800/90 border-indigo-500/60 shadow-lg shadow-indigo-500/10'
                           : 'bg-slate-950/70 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/60'

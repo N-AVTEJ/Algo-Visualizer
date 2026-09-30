@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Play, RotateCcw, ArrowRight, Gauge, CheckCircle2 } from 'lucide-react';
@@ -11,7 +11,14 @@ export const InteractiveRaceTeaser: React.FC = () => {
   const [opsB, setOpsB] = useState(0);
   const [winner, setWinner] = useState<string | null>(null);
 
+  const stateRef = useRef({
+    pA: 0,
+    pB: 0,
+    winnerDeclared: false,
+  });
+
   const startRace = () => {
+    stateRef.current = { pA: 0, pB: 0, winnerDeclared: false };
     setProgressA(0);
     setProgressB(0);
     setOpsA(0);
@@ -21,6 +28,7 @@ export const InteractiveRaceTeaser: React.FC = () => {
   };
 
   const resetRace = () => {
+    stateRef.current = { pA: 0, pB: 0, winnerDeclared: false };
     setIsRunning(false);
     setProgressA(0);
     setProgressB(0);
@@ -32,37 +40,34 @@ export const InteractiveRaceTeaser: React.FC = () => {
   useEffect(() => {
     if (!isRunning) return;
 
-    let pA = 0;
-    let pB = 0;
-    let oA = 0;
-    let oB = 0;
-
     const interval = setInterval(() => {
+      const cur = stateRef.current;
+
       // Merge Sort progresses much faster due to O(n log n)
-      pA = Math.min(100, pA + 4.8);
-      oA = Math.floor(pA * 8.5);
+      cur.pA = Math.min(100, cur.pA + 4.8);
+      const oA = Math.floor(cur.pA * 8.5);
 
       // Bubble sort progresses slower due to quadratic comparisons
-      pB = Math.min(100, pB + 1.3);
-      oB = Math.floor(pB * 48.2);
+      cur.pB = Math.min(100, cur.pB + 1.3);
+      const oB = Math.floor(cur.pB * 48.2);
 
-      setProgressA(pA);
-      setProgressB(pB);
+      setProgressA(cur.pA);
+      setProgressB(cur.pB);
       setOpsA(oA);
       setOpsB(oB);
 
-      if (pA >= 100 && !winner) {
+      if (cur.pA >= 100 && !cur.winnerDeclared) {
+        cur.winnerDeclared = true;
         setWinner('Merge Sort');
       }
 
-      if (pA >= 100 && pB >= 100) {
+      if (cur.pA >= 100 && cur.pB >= 100) {
         setIsRunning(false);
-        clearInterval(interval);
       }
     }, 45);
 
     return () => clearInterval(interval);
-  }, [isRunning, winner]);
+  }, [isRunning]);
 
   return (
     <div className="rounded-2xl bg-gradient-to-r from-slate-900/90 via-slate-900 to-indigo-950/40 border border-slate-800 p-6 sm:p-8 backdrop-blur-md relative overflow-hidden">
@@ -121,7 +126,7 @@ export const InteractiveRaceTeaser: React.FC = () => {
               <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-medium">
                 O(n log n)
               </span>
-              {progressA >= 100 && (
+              {winner === 'Merge Sort' && (
                 <span className="inline-flex items-center space-x-1 text-xs text-emerald-400 font-bold ml-2">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Finished First!</span>
@@ -132,7 +137,14 @@ export const InteractiveRaceTeaser: React.FC = () => {
               Operations: <span className="text-emerald-400 font-bold">{opsA.toLocaleString()}</span>
             </div>
           </div>
-          <div className="w-full h-3 rounded-full bg-slate-800/80 overflow-hidden">
+          <div
+            role="progressbar"
+            aria-label="Merge Sort simulation progress"
+            aria-valuenow={Math.round(progressA)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            className="w-full h-3 rounded-full bg-slate-800/80 overflow-hidden"
+          >
             <motion.div
               className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full"
               style={{ width: `${progressA}%` }}
@@ -150,12 +162,24 @@ export const InteractiveRaceTeaser: React.FC = () => {
               <span className="text-xs font-mono px-2 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800/60 font-medium">
                 O(n²)
               </span>
+              {progressB >= 100 && (
+                <span className="inline-flex items-center space-x-1 text-xs text-rose-400 font-medium ml-2">
+                  <span>Completed</span>
+                </span>
+              )}
             </div>
             <div className="text-xs font-mono text-slate-400">
               Operations: <span className="text-rose-400 font-bold">{opsB.toLocaleString()}</span>
             </div>
           </div>
-          <div className="w-full h-3 rounded-full bg-slate-800/80 overflow-hidden">
+          <div
+            role="progressbar"
+            aria-label="Bubble Sort simulation progress"
+            aria-valuenow={Math.round(progressB)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            className="w-full h-3 rounded-full bg-slate-800/80 overflow-hidden"
+          >
             <motion.div
               className="h-full bg-gradient-to-r from-rose-500 to-amber-500 rounded-full"
               style={{ width: `${progressB}%` }}

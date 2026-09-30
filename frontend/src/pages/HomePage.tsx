@@ -60,19 +60,17 @@ export const HomePage: React.FC = () => {
         setModules(data);
         setLoading(false);
 
-        // Fetch algorithms per module to compute per-module completion
+        // Fetch algorithms per module concurrently to compute per-module completion
+        const results = await Promise.allSettled(
+          data.map((m) => algorithmsApi.list(m.id))
+        );
+        if (!isMounted) return;
         const algoMap: Record<number, Algorithm[]> = {};
-        for (const m of data) {
-          try {
-            const algos = await algorithmsApi.list(m.id);
-            algoMap[m.id] = algos;
-          } catch {
-            algoMap[m.id] = [];
-          }
-        }
-        if (isMounted) {
-          setModuleAlgoMap(algoMap);
-        }
+        data.forEach((m, idx) => {
+          const res = results[idx];
+          algoMap[m.id] = res.status === 'fulfilled' ? res.value : [];
+        });
+        setModuleAlgoMap(algoMap);
       })
       .catch((err: Error) => {
         if (isMounted) {
