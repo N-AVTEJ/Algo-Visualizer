@@ -30,7 +30,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-
+.agents/
 # Testing & Coverage
 coverage/
 .coverage
