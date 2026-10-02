@@ -2,13 +2,37 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from contextlib import asynccontextmanager
+import logging
 from app.api.api import api_router
 from app.core.config import settings
+from app.db.base_class import Base
+from app.db.session import engine, SessionLocal
+import app.models
+from app.seed import seed_modules
+
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        try:
+            seed_modules(db)
+        finally:
+            db.close()
+        logger.info("Database initialized and seeded successfully.")
+    except Exception as e:
+        logger.error(f"Database initialization error on startup: {e}", exc_info=True)
+    yield
 
 app = FastAPI(
     title="AlgoLens Pro API",
     description="High-performance backend API for algorithm visualizations and telemetry",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 cors_origins = settings.CORS_ORIGINS
