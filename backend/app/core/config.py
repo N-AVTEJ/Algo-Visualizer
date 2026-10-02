@@ -80,5 +80,23 @@ class Settings:
     OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
     OPENAI_CHAT_MODEL: str = "gpt-4o-mini"
 
+    # CORS configuration
+    @property
+    def CORS_ORIGINS(self) -> list[str]:
+        raw_origins = os.getenv("CORS_ORIGINS", "").strip()
+        default_origins = [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+        ]
+        if not raw_origins:
+            return default_origins
+        if raw_origins == "*":
+            return ["*"]
+        custom = [origin.strip().rstrip("/") for origin in raw_origins.split(",") if origin.strip()]
+        return list(dict.fromkeys(default_origins + custom))
+
+
 
 settings = Settings()
