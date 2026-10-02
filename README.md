@@ -176,6 +176,41 @@ Algo-Visualizer/
 
 ---
 
+## 🌐 Production Deployment Guide
+
+AlgoLens Pro is architected for seamless production deployment with full separation of concerns:
+- **Frontend**: Hosted on **[Vercel](https://vercel.com/)** as an Edge-distributed Single Page Application (SPA).
+- **Backend**: Hosted on any Python PaaS (e.g., **Render**, **Railway**, **Fly.io**, or **Koyeb**).
+
+### 1. Deploy Frontend to Vercel
+
+1. Import this repository into your **[Vercel Dashboard](https://vercel.com/)**.
+2. Configure project settings:
+   - **Framework Preset**: `Vite`
+   - **Root Directory**: `frontend` *(or leave default repository root `./`; root `vercel.json` is pre-configured)*
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+3. Set **Environment Variables** in Vercel:
+   - `VITE_API_URL`: `https://<your-backend-host>/api` *(e.g., `https://algolens-api.onrender.com/api`)*
+4. Click **Deploy**.
+
+> **SPA Routing Guarantee**: Both `frontend/vercel.json` and root `vercel.json` include URL rewrite rules (`/(.*) -> /index.html`). Direct visits and page refreshes on subroutes (`/module/:id`, `/compare`, `/ai-assistant`) will never throw 404 Not Found.
+
+---
+
+### 2. Deploy Backend (FastAPI)
+
+1. Deploy the `backend/` directory as a Python Web Service:
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port 8000`
+2. Configure **Environment Variables**:
+   - `GEMINI_API_KEY`: Your Google Gemini API Key
+   - `SECRET_KEY`: A 32-character secret hex
+   - `DATABASE_URL`: Supabase PostgreSQL URI (or omit for SQLite fallback)
+   - `CORS_ORIGINS`: *(Optional)* Custom domains. Any `https://*.vercel.app` preview or production deployment is permitted automatically.
+
+---
+
 ## 🎮 Playback & Keyboard Shortcuts
 
 - **Spacebar / Play Button**: Toggle Play / Pause on animation timeline.
