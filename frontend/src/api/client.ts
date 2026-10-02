@@ -33,9 +33,15 @@ import type {
   AskResponse,
 } from '../types';
 
-export const API_BASE_URL =
-  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/+$/, '') ||
-  'http://localhost:8000/api';
+function normalizeApiUrl(rawUrl?: string): string {
+  if (!rawUrl || !rawUrl.trim()) {
+    return 'http://localhost:8000/api';
+  }
+  const trimmed = rawUrl.trim().replace(/\/+$/, '');
+  return trimmed.endsWith('/api') ? trimmed : ${trimmed}/api;
+}
+
+export const API_BASE_URL = normalizeApiUrl(import.meta.env.VITE_API_URL);
 
 export class ApiError extends Error {
   status: number;
