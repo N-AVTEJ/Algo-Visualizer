@@ -1,5 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Bot, Send, Sparkles, User as UserIcon, AlertCircle, Tag } from 'lucide-react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import {
+  Bot,
+  Send,
+  Sparkles,
+  User as UserIcon,
+  AlertCircle,
+  Tag,
+  Copy,
+  Check,
+  Download,
+  FileText,
+} from 'lucide-react';
+import { marked } from 'marked';
 import { aiApi, ApiError } from '../api/client';
 import type { AskResponse } from '../types';
 
@@ -51,6 +63,39 @@ interface MessageBubbleProps {
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   const isUser = message.role === 'user';
+  const [copied, setCopied] = useState(false);
+
+  // Parse markdown content safely
+  const parsedMarkdownHtml = useMemo(() => {
+    if (isUser || message.error) return '';
+    try {
+      return marked.parse(message.text, { breaks: true, gfm: true }) as string;
+    } catch {
+      return message.text;
+    }
+  }, [message.text, isUser, message.error]);
+
+  const handleCopyMarkdown = async () => {
+    try {
+      await navigator.clipboard.writeText(message.text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+    }
+  };
+
+  const handleDownloadMarkdown = () => {
+    const blob = new Blob([message.text], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `algolens-explanation-${message.id}.md`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   if (isUser) {
     return (
@@ -66,16 +111,16 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   }
 
   return (
-    <div className="flex items-start gap-3 max-w-[85%]">
+    <div className="flex items-start gap-3 max-w-[88%] sm:max-w-[85%]">
       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-indigo-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-violet-900/40">
         <Bot className="w-4 h-4 text-white" />
       </div>
       <div className="space-y-2 flex-1">
         <div
-          className={`rounded-2xl rounded-tl-sm px-4 py-3 border shadow-sm ${
+          className={`rounded-2xl rounded-tl-sm px-4 py-3.5 border shadow-sm ${
             message.error
               ? 'bg-red-950/40 border-red-800/50 text-red-300'
-              : 'bg-slate-800 border-slate-700/60 text-slate-200'
+              : 'bg-slate-800/90 border-slate-700/60 text-slate-200'
           }`}
         >
           {message.error && (
@@ -84,7 +129,54 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
               <span className="text-xs font-semibold text-red-400 uppercase tracking-wider">Error</span>
             </div>
           )}
-          <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
+
+          {message.error ? (
+            <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
+          ) : (
+            <div
+              className="ai-markdown-content"
+              dangerouslySetInnerHTML={{ __html: parsedMarkdownHtml }}
+            />
+          )}
+
+          {/* Action Toolbar for Markdown export & copy */}
+          {!message.error && (
+            <div className="flex flex-wrap items-center gap-2 pt-3 mt-3 border-t border-slate-700/50 text-xs select-none">
+              <button
+                type="button"
+                onClick={handleCopyMarkdown}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 hover:bg-slate-700/70 border border-slate-700/60 text-slate-300 hover:text-white transition-all"
+                title="Copy response markdown"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-emerald-400 font-medium">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Copy Markdown</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleDownloadMarkdown}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 hover:bg-slate-700/70 border border-slate-700/60 text-slate-300 hover:text-white transition-all"
+                title="Download this explanation as a .md file"
+              >
+                <Download className="w-3.5 h-3.5 text-violet-400" />
+                <span>Download .md</span>
+              </button>
+
+              <span className="text-[11px] text-slate-500 ml-auto hidden sm:inline-flex items-center gap-1">
+                <FileText className="w-3 h-3" />
+                Markdown Formatted
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Source chips */}
@@ -118,8 +210,8 @@ const SUGGESTIONS = [
   'Explain the 0/1 Knapsack DP table.',
   'How does Branch & Bound differ from Backtracking?',
   'What makes SAT NP-Complete?',
-  'When should I use Kruskal\'s vs Prim\'s MST?',
-  'Explain Big-O notation with examples.',
+  'Explain Master Theorem with cases and examples.',
+  'How does Dijkstra differ from Bellman-Ford?',
 ];
 
 // ---------------------------------------------------------------------------
@@ -217,20 +309,29 @@ export const AIAssistantPage: React.FC = () => {
     <div className="flex flex-col h-full" style={{ minHeight: 'calc(100vh - 9rem)' }}>
       {/* Header */}
       <div className="flex-none pb-4 border-b border-slate-800 mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-900/40">
-            <Bot className="w-5 h-5 text-white" />
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-900/40">
+              <Bot className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
+                AI Assistant
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-violet-950/70 border border-violet-800/60 text-violet-300">
+                  Google Gemini
+                </span>
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-400">
+                Ask anything about algorithms, complexity proofs, or the DAA curriculum.
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
-              AI Assistant
-              <span className="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-950/60 border border-violet-800/50 text-violet-300">
-                Beta
-              </span>
-            </h1>
-            <p className="text-sm text-slate-400">
-              Ask anything about algorithms, complexity, or the DAA curriculum.
-            </p>
+
+          <div className="hidden sm:flex items-center gap-2">
+            <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              gemini-2.5-flash-lite
+            </span>
           </div>
         </div>
       </div>
@@ -244,10 +345,10 @@ export const AIAssistantPage: React.FC = () => {
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-500 flex items-center justify-center mx-auto shadow-xl shadow-violet-900/50">
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-100">How can I help you?</h2>
+              <h2 className="text-2xl font-bold text-slate-100">How can I help you today?</h2>
               <p className="text-slate-400 text-sm max-w-md">
-                I'm trained on the AlgoLens Pro curriculum. Ask me about time complexity,
-                algorithm design, or how any visualized algorithm works.
+                I'm your algorithmic tutor powered by Google Gemini and trained on the AlgoLens Pro curriculum.
+                Ask me about time complexity, algorithm design, or mathematical proofs.
               </p>
             </div>
 
@@ -317,8 +418,9 @@ export const AIAssistantPage: React.FC = () => {
           </button>
         </form>
 
-        <p className="text-xs text-slate-600 mt-2 text-center">
-          Powered by GPT-4o mini · Shift+Enter for new line · Answers grounded in curriculum context
+        <p className="text-xs text-slate-500 mt-2 text-center flex items-center justify-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+          <span>Powered by Google Gemini (gemini-2.5-flash-lite) · Shift+Enter for new line · Answers grounded in curriculum context</span>
         </p>
       </div>
     </div>
